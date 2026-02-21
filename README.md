@@ -1,1 +1,1 @@
-# 2-and-1-2-hackers
+# 2 and 1/2 Hackers
