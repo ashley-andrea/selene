@@ -65,12 +65,63 @@ app.add_middleware(
 
 # ── Request / Response Models ───────────────────────────────────────────────
 class PatientInput(BaseModel):
-    """Patient data submitted for a recommendation."""
+    """Patient data submitted for a recommendation.
 
-    age: int = Field(..., ge=15, le=55, description="Patient age in years")
+    Accepts both the compact form-based format (age + lists) AND the full
+    structured format produced by the PDF extractor (obs_*, cond_* fields).
+    When obs_* / cond_* fields are supplied they are passed directly to the
+    cluster/simulator models; when absent the models use imputed defaults.
+    """
+
+    # Core demographics
+    age: int = Field(..., ge=15, le=60, description="Patient age in years")
+
+    # Human-readable lists (used by safe_gate for hard constraints)
     pathologies: list[str] = Field(default_factory=list, description="Active diagnosed conditions")
     habits: list[str] = Field(default_factory=list, description="Lifestyle habits")
     medical_history: list[str] = Field(default_factory=list, description="Past medical events")
+
+    # ── Numeric vitals (optional — imputed by the ML model if absent) ────────
+    obs_bmi: float | None = Field(None, ge=10.0, le=60.0, description="BMI")
+    obs_systolic_bp: float | None = Field(None, ge=70.0, le=220.0, description="Systolic BP (mmHg)")
+    obs_diastolic_bp: float | None = Field(None, ge=40.0, le=140.0, description="Diastolic BP (mmHg)")
+    obs_phq9_score: float | None = Field(None, ge=0.0, le=27.0, description="PHQ-9 depression score")
+    obs_testosterone: float | None = Field(None, ge=0.0, le=300.0, description="Testosterone (ng/dL)")
+    obs_smoker: int = Field(0, ge=0, le=1, description="Current smoker: 1=yes, 0=no")
+    obs_pain_score: float = Field(0.0, ge=0.0, le=10.0, description="Pain score 0-10")
+
+    # ── Binary condition flags (optional — derived from lists if absent) ─────
+    cond_migraine_with_aura: int = Field(0, ge=0, le=1)
+    cond_stroke: int = Field(0, ge=0, le=1)
+    cond_mi: int = Field(0, ge=0, le=1)
+    cond_dvt: int = Field(0, ge=0, le=1)
+    cond_breast_cancer: int = Field(0, ge=0, le=1)
+    cond_lupus: int = Field(0, ge=0, le=1)
+    cond_thrombophilia: int = Field(0, ge=0, le=1)
+    cond_atrial_fibrillation: int = Field(0, ge=0, le=1)
+    cond_liver_disease: int = Field(0, ge=0, le=1)
+    cond_hypertension: int = Field(0, ge=0, le=1)
+    cond_migraine: int = Field(0, ge=0, le=1)
+    cond_gallstones: int = Field(0, ge=0, le=1)
+    cond_diabetes: int = Field(0, ge=0, le=1)
+    cond_prediabetes: int = Field(0, ge=0, le=1)
+    cond_epilepsy: int = Field(0, ge=0, le=1)
+    cond_chronic_kidney_disease: int = Field(0, ge=0, le=1)
+    cond_sleep_apnea: int = Field(0, ge=0, le=1)
+    cond_pcos: int = Field(0, ge=0, le=1)
+    cond_endometriosis: int = Field(0, ge=0, le=1)
+    cond_depression: int = Field(0, ge=0, le=1)
+    cond_hypothyroidism: int = Field(0, ge=0, le=1)
+    cond_rheumatoid_arthritis: int = Field(0, ge=0, le=1)
+    cond_fibromyalgia: int = Field(0, ge=0, le=1)
+    cond_osteoporosis: int = Field(0, ge=0, le=1)
+    cond_asthma: int = Field(0, ge=0, le=1)
+
+    # Absolute contraindication flag (computed by safe_gate but can be pre-set)
+    med_ever_ocp: int = Field(0, ge=0, le=1)
+    med_current_combined_ocp: int = Field(0, ge=0, le=1)
+    med_current_minipill: int = Field(0, ge=0, le=1)
+    has_absolute_contraindication_combined_oc: int = Field(0, ge=0, le=1)
 
 
 class PDFExtractionResult(BaseModel):
@@ -82,6 +133,42 @@ class PDFExtractionResult(BaseModel):
     pathologies: list[str] = Field(default_factory=list, description="Active diagnosed conditions")
     habits: list[str] = Field(default_factory=list, description="Lifestyle habits")
     medical_history: list[str] = Field(default_factory=list, description="Past medical events")
+
+    # Numeric vitals extracted from the document
+    obs_bmi: float | None = Field(None, description="BMI, null if not in document")
+    obs_systolic_bp: float | None = Field(None, description="Systolic BP (mmHg), null if not in document")
+    obs_diastolic_bp: float | None = Field(None, description="Diastolic BP (mmHg), null if not in document")
+    obs_phq9_score: float | None = Field(None, description="PHQ-9 score, null if not in document")
+    obs_testosterone: float | None = Field(None, description="Testosterone (ng/dL), null if not in document")
+    obs_smoker: int = Field(0, description="Current smoker: 1=yes, 0=no")
+
+    # Binary condition flags extracted by the LLM
+    cond_migraine_with_aura: int = Field(0)
+    cond_stroke: int = Field(0)
+    cond_mi: int = Field(0)
+    cond_dvt: int = Field(0)
+    cond_breast_cancer: int = Field(0)
+    cond_lupus: int = Field(0)
+    cond_thrombophilia: int = Field(0)
+    cond_atrial_fibrillation: int = Field(0)
+    cond_liver_disease: int = Field(0)
+    cond_hypertension: int = Field(0)
+    cond_migraine: int = Field(0)
+    cond_gallstones: int = Field(0)
+    cond_diabetes: int = Field(0)
+    cond_prediabetes: int = Field(0)
+    cond_epilepsy: int = Field(0)
+    cond_chronic_kidney_disease: int = Field(0)
+    cond_sleep_apnea: int = Field(0)
+    cond_pcos: int = Field(0)
+    cond_endometriosis: int = Field(0)
+    cond_depression: int = Field(0)
+    cond_hypothyroidism: int = Field(0)
+    cond_rheumatoid_arthritis: int = Field(0)
+    cond_fibromyalgia: int = Field(0)
+    cond_osteoporosis: int = Field(0)
+    cond_asthma: int = Field(0)
+
     pages_parsed: int = Field(0, description="Number of PDF pages that were parsed")
     parser_backend: str = Field("", description="Which parser was used: 'dots_ocr' or 'pymupdf'")
 
@@ -214,6 +301,39 @@ async def upload_pdf(file: UploadFile = File(...)):
         pathologies=patient_data.get("pathologies", []),
         habits=patient_data.get("habits", []),
         medical_history=patient_data.get("medical_history", []),
+        # Numeric vitals (may be None if not found in the PDF)
+        obs_bmi=patient_data.get("obs_bmi"),
+        obs_systolic_bp=patient_data.get("obs_systolic_bp"),
+        obs_diastolic_bp=patient_data.get("obs_diastolic_bp"),
+        obs_phq9_score=patient_data.get("obs_phq9_score"),
+        obs_testosterone=patient_data.get("obs_testosterone"),
+        obs_smoker=int(patient_data.get("obs_smoker", 0)),
+        # Binary condition flags extracted by the LLM
+        cond_migraine_with_aura=int(patient_data.get("cond_migraine_with_aura", 0)),
+        cond_stroke=int(patient_data.get("cond_stroke", 0)),
+        cond_mi=int(patient_data.get("cond_mi", 0)),
+        cond_dvt=int(patient_data.get("cond_dvt", 0)),
+        cond_breast_cancer=int(patient_data.get("cond_breast_cancer", 0)),
+        cond_lupus=int(patient_data.get("cond_lupus", 0)),
+        cond_thrombophilia=int(patient_data.get("cond_thrombophilia", 0)),
+        cond_atrial_fibrillation=int(patient_data.get("cond_atrial_fibrillation", 0)),
+        cond_liver_disease=int(patient_data.get("cond_liver_disease", 0)),
+        cond_hypertension=int(patient_data.get("cond_hypertension", 0)),
+        cond_migraine=int(patient_data.get("cond_migraine", 0)),
+        cond_gallstones=int(patient_data.get("cond_gallstones", 0)),
+        cond_diabetes=int(patient_data.get("cond_diabetes", 0)),
+        cond_prediabetes=int(patient_data.get("cond_prediabetes", 0)),
+        cond_epilepsy=int(patient_data.get("cond_epilepsy", 0)),
+        cond_chronic_kidney_disease=int(patient_data.get("cond_chronic_kidney_disease", 0)),
+        cond_sleep_apnea=int(patient_data.get("cond_sleep_apnea", 0)),
+        cond_pcos=int(patient_data.get("cond_pcos", 0)),
+        cond_endometriosis=int(patient_data.get("cond_endometriosis", 0)),
+        cond_depression=int(patient_data.get("cond_depression", 0)),
+        cond_hypothyroidism=int(patient_data.get("cond_hypothyroidism", 0)),
+        cond_rheumatoid_arthritis=int(patient_data.get("cond_rheumatoid_arthritis", 0)),
+        cond_fibromyalgia=int(patient_data.get("cond_fibromyalgia", 0)),
+        cond_osteoporosis=int(patient_data.get("cond_osteoporosis", 0)),
+        cond_asthma=int(patient_data.get("cond_asthma", 0)),
         pages_parsed=len(pages),
         parser_backend=parser_backend,
     )
