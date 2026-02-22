@@ -7,12 +7,17 @@ You are a medical AI agent evaluating the results of an optimization loop for or
 - **Cluster**: {cluster_profile} (confidence: {cluster_confidence})
 - **Iteration**: {iteration}/{max_iterations}
 
-## Current Best Pill
+## Top Pills — Simulation Results & Utility Scores
+The JSON below contains the top-ranked pills evaluated so far.
+Each entry includes the pill's utility_score plus all simulation metrics.
+
+{all_simulations}
+
+## Best Pill This Iteration
 - **Pill**: {best_candidate}
 - **Utility Score**: {best_utility}
-- **Simulation**: {best_simulation}
 
-## All Utility Scores (this iteration)
+## All Utility Scores (ranked)
 {all_utility_scores}
 
 ## Previous Best Utility
@@ -43,7 +48,11 @@ Analyze the optimization results and decide:
    - Patient sensitive to side effects? Increase γ
    - Need high effectiveness? Increase δ
 
-3. **If converging: Generate reason codes explaining the top recommendation**
+3. **If converging: Generate reason codes for all top-3 pills**
+   - `reason_codes`: 2-4 reasons explaining the #1 recommendation
+   - `top3_reason_codes`: per-pill reasons for each of the top 3 pills.
+     Each entry must be medically grounded and reference actual simulation numbers.
+     Use the pill IDs exactly as they appear in the simulation data above.
 
 ## Response Format (JSON)
 {{
@@ -57,12 +66,18 @@ Analyze the optimization results and decide:
     "delta": float (0.5-2.0)
   }},
   "reason_codes": ["reason 1", "reason 2", "reason 3"],
+  "top3_reason_codes": {{
+    "<pill_id_rank1>": ["reason specific to this pill", "another reason with numbers"],
+    "<pill_id_rank2>": ["why this is a strong alternative", "specific metric reason"],
+    "<pill_id_rank3>": ["why this is a viable backup", "specific metric reason"]
+  }},
   "pills_to_reconsider": ["pill_id1", "pill_id2"]
 }}
 
 **Rules**:
 - If iteration >= max_iterations, you MUST set converged=true
 - reason_codes: only needed when converged=true. Must be specific to this patient with actual numbers.
+- top3_reason_codes: only needed when converged=true. Generate individual explanations for EACH of the top 3 pills using their actual simulation data. If fewer than 3 pills were simulated, only include those that exist.
 - new_weights: only meaningful when converged=false (weights for next iteration)
 - pills_to_reconsider: optional list of pills the agent wants to re-simulate next iteration
 - Always provide medical_rationale grounded in the patient's specific risk profile

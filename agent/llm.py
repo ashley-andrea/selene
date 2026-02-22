@@ -29,7 +29,7 @@ def get_llm():
         return ChatAnthropic(
             model=os.getenv("CLAUDE_MODEL", "claude-sonnet-4-6"),
             api_key=os.getenv("ANTHROPIC_API_KEY"),
-            max_tokens=1024,
+            max_tokens=4096,
             temperature=0,
         )
 

@@ -184,6 +184,7 @@ class PillRecommendation(BaseModel):
     pill_id: str
     rank: int  # 1, 2, or 3
     utility_score: float
+    risk_score: float = Field(0.0, description="Agent-assessed risk score (0.0 = lowest risk, 1.0 = highest)")
     predicted_discontinuation: float
     severe_risk: float
     mild_side_effect_score: float
@@ -266,6 +267,7 @@ async def recommend(patient: PatientInput):
         "best_candidate": None,
         "previous_best_utility": None,
         "reason_codes": [],
+        "top3_reason_codes": None,
     }
 
     try:
@@ -395,90 +397,64 @@ def _build_output(state: dict) -> RecommendationOutput:
     """Transform the final agent state into the API response with top 3 pills."""
     utility_scores = state.get("utility_scores", {})
     simulated_results = state.get("simulated_results", {})
-    
+    risk_scores = state.get("risk_scores") or {}
+    top3_reason_codes = state.get("top3_reason_codes") or {}
+
     # Get top 3 pills by utility score
     sorted_pills = sorted(
-        utility_scores.items(), 
-        key=lambda x: x[1], 
-        reverse=True
+        utility_scores.items(),
+        key=lambda x: x[1],
+        reverse=True,
     )[:3]
-    
+
     if not sorted_pills:
         raise HTTPException(status_code=500, detail="No candidates evaluated")
-    
+
     cluster = state.get("cluster_profile", "")
     if isinstance(cluster, dict):
         cluster = cluster.get("profile", "unknown")
-    
+
     # Build detailed recommendations for each of top 3
     recommendations = []
     for rank, (pill_id, utility) in enumerate(sorted_pills, start=1):
         sim = simulated_results.get(pill_id, {})
-        
-        # Generate pill-specific reason codes
-        # For rank 1, use the agent's reason codes
-        # For ranks 2 and 3, generate comparative reason codes
-        if rank == 1:
-            reason_codes = state.get("reason_codes", [f"highest utility score ({utility:.3f})"])
-        else:
-            reason_codes = _generate_comparative_reasons(
-                pill_id, sim, utility, rank, sorted_pills[0][0], utility_scores[sorted_pills[0][0]]
-            )
-        
+
+        # Per-pill reason codes come from the LLM via top3_reason_codes.
+        # Fall back to the global reason_codes for rank 1, or a minimal
+        # placeholder for ranks 2-3 when the LLM didn't produce them.
+        pill_reasons = top3_reason_codes.get(pill_id)
+        if not pill_reasons:
+            if rank == 1:
+                pill_reasons = state.get("reason_codes") or [f"highest utility score ({utility:.3f})"]
+            else:
+                pill_reasons = [f"rank {rank} by utility score ({utility:.3f})"]
+
+        # Risk score from the risk assessor LLM (0.0 = lowest risk, 1.0 = highest).
+        agent_risk_score = float(
+            (risk_scores.get(pill_id) or {}).get("risk_score", 0.0)
+        )
+
         recommendations.append(PillRecommendation(
             pill_id=pill_id,
             rank=rank,
             utility_score=round(utility, 4),
+            risk_score=round(agent_risk_score, 4),
             predicted_discontinuation=sim.get("discontinuation_probability", 0.0),
             severe_risk=sim.get("severe_event_probability", 0.0),
             mild_side_effect_score=sim.get("mild_side_effect_score", 0.0),
             contraceptive_effectiveness=sim.get("contraceptive_effectiveness", 0.0),
-            reason_codes=reason_codes,
+            reason_codes=pill_reasons,
             # Trajectory data for time-series plots
             months=sim.get("months", []),
             symptom_probs=sim.get("symptom_probs", {}),
             satisfaction=sim.get("satisfaction", []),
         ))
-    
+
     return RecommendationOutput(
         recommendations=recommendations,
         cluster_profile=cluster,
         cluster_confidence=state.get("cluster_confidence", 0.0),
         iterations=state.get("iteration", 0),
         total_candidates_evaluated=len(utility_scores),
-        selected_pill=sorted_pills[0][0],  # Best pill
+        selected_pill=sorted_pills[0][0],
     )
-
-
-def _generate_comparative_reasons(
-    pill_id: str,
-    sim: dict,
-    utility: float,
-    rank: int,
-    best_pill_id: str,
-    best_utility: float,
-) -> list[str]:
-    """Generate comparative reason codes for non-primary recommendations."""
-    reasons = []
-    
-    # Utility comparison
-    utility_diff = best_utility - utility
-    reasons.append(f"utility score {utility:.3f} ({utility_diff:.3f} below top choice)")
-    
-    # Highlight strengths
-    if sim.get("severe_event_probability", 1.0) < 0.005:
-        reasons.append(f"very low severe event risk ({sim['severe_event_probability']:.1%})")
-    
-    if sim.get("discontinuation_probability", 1.0) < 0.15:
-        reasons.append(f"low discontinuation probability ({sim['discontinuation_probability']:.1%})")
-    
-    if sim.get("contraceptive_effectiveness", 0.0) >= 0.95:
-        reasons.append(f"high contraceptive effectiveness ({sim['contraceptive_effectiveness']:.1%})")
-    
-    # Add rank context
-    if rank == 2:
-        reasons.append("strong alternative if primary choice is not tolerated")
-    elif rank == 3:
-        reasons.append("viable backup option for this patient profile")
-    
-    return reasons[:4]  # Limit to 4 reasons

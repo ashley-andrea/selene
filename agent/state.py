@@ -46,5 +46,6 @@ class SystemState(TypedDict):
     previous_best_utility: Optional[float]  # For convergence comparison
 
     # ── Output ──────────────────────────────────────────────────────────────
-    reason_codes: list  # Human-readable explanations for the recommendation
+    reason_codes: list  # Human-readable explanations for the #1 recommendation
+    top3_reason_codes: Optional[dict]  # {pill_id: [reasons]} for top-3 pills (LLM-generated)
 

@@ -44,7 +44,21 @@ def run(state: SystemState) -> dict:
         return {"utility_scores": {}, "best_candidate": None}
 
     # Use agent-chosen weights, or defaults on first iteration
-    weights = state.get("utility_weights") or DEFAULT_WEIGHTS
+    weights = dict(state.get("utility_weights") or DEFAULT_WEIGHTS)
+
+    # Apply low-confidence cluster weight adjustment if present.
+    # When the cluster model is uncertain, we scale up the risk penalty terms
+    # (alpha, beta) to be more conservative — i.e. penalise risky pills harder.
+    cluster_info = state.get("cluster_profile")
+    if isinstance(cluster_info, dict) and cluster_info.get("low_confidence"):
+        adj = float(cluster_info.get("weight_adjustment", 1.0))
+        if adj != 1.0:
+            weights["alpha"] = weights["alpha"] * adj
+            weights["beta"] = weights["beta"] * adj
+            logger.info(
+                "Low-confidence cluster adjustment (%.2f) applied → α=%.2f β=%.2f",
+                adj, weights["alpha"], weights["beta"],
+            )
 
     logger.info(
         "Scoring with weights: α=%.2f β=%.2f γ=%.2f δ=%.2f",

@@ -37,6 +37,7 @@ def make_state(**overrides) -> dict:
         "converged": False,
         "previous_best_utility": None,
         "reason_codes": [],
+        "top3_reason_codes": None,
     }
     base.update(overrides)
     return base
@@ -58,7 +59,7 @@ class TestValidator:
     def test_missing_field_raises(self):
         from agent.nodes import validator
 
-        state = make_state(patient_data={"age": 28})
+        state = make_state(patient_data={"pathologies": [], "habits": [], "medical_history": []})
         with pytest.raises(ValueError, match="Missing required patient field"):
             validator.run(state)
 
@@ -267,6 +268,10 @@ class TestConvergence:
                 "confidence": 0.9,
                 "medical_rationale": "Maximum iterations reached with stable utility",
                 "reason_codes": ["reason 1", "reason 2"],
+                "top3_reason_codes": {
+                    "pill_a": ["lowest severe risk at 0.5%", "high adherence expected"],
+                    "pill_b": ["good effectiveness profile", "progestin-only safer option"],
+                },
             })
         )
 
@@ -275,6 +280,7 @@ class TestConvergence:
 
         assert result["converged"] is True
         assert len(result["reason_codes"]) >= 2
+        assert isinstance(result["top3_reason_codes"], dict)
 
     def test_does_not_converge_on_first_iteration(self):
         from agent.nodes import convergence

@@ -72,4 +72,5 @@ def run(state: SystemState) -> dict:
         "best_candidate": None,
         "previous_best_utility": None,
         "reason_codes": [],
+        "top3_reason_codes": None,
     }

@@ -56,13 +56,22 @@ def run(state: SystemState) -> dict:
     # Best candidate's simulation data
     best_sim = state.get("simulated_results", {}).get(best_candidate, {})
 
+    # Build top-3 pill data so the LLM can generate per-pill explanations and
+    # make a fully-informed convergence decision (not just the #1 pill).
+    all_simulated = state.get("simulated_results", {})
+    top3_items = sorted(utility_scores.items(), key=lambda x: x[1], reverse=True)[:3]
+    all_simulations_data = {
+        pid: {"utility_score": round(score, 4), **all_simulated.get(pid, {})}
+        for pid, score in top3_items
+    }
+
     decision = _ask_llm(
         iteration=iteration,
         best_candidate=best_candidate,
         best_utility=best_utility,
         previous_utility=previous_utility,
         all_utilities=utility_scores,
-        best_simulation=best_sim,
+        all_simulations=all_simulations_data,
         cluster_profile=cluster_profile,
         cluster_confidence=cluster_confidence,
         patient_data=patient_data,
@@ -90,6 +99,7 @@ def run(state: SystemState) -> dict:
 
     # ── Converge ────────────────────────────────────────────────────────
     reason_codes = decision.get("reason_codes", [])
+    top3_reason_codes = decision.get("top3_reason_codes", {})
     logger.info(
         "🧠 AGENT: Converge at iter %d | best=%s (%.4f) | %s",
         iteration + 1, best_candidate, best_utility, medical_rationale,
@@ -99,6 +109,7 @@ def run(state: SystemState) -> dict:
         "iteration": iteration + 1,
         "previous_best_utility": best_utility,
         "reason_codes": reason_codes,
+        "top3_reason_codes": top3_reason_codes,
     }
 
 
@@ -122,7 +133,7 @@ def _ask_llm(
     best_utility: float,
     previous_utility: float | None,
     all_utilities: dict,
-    best_simulation: dict,
+    all_simulations: dict,
     cluster_profile: str,
     cluster_confidence: float,
     patient_data: dict,
@@ -161,7 +172,7 @@ def _ask_llm(
             max_iterations=MAX_ITERATIONS,
             best_candidate=best_candidate,
             best_utility=round(best_utility, 4),
-            best_simulation=json.dumps(best_simulation, indent=2),
+            all_simulations=json.dumps(all_simulations, indent=2),
             previous_utility=prev_str,
             all_utility_scores=all_utils_str,
             alpha=current_weights.get("alpha", DEFAULT_WEIGHTS["alpha"]),
@@ -207,6 +218,7 @@ def _fallback_decision(
             "new_weights": DEFAULT_WEIGHTS,
             "pills_to_reconsider": [],
             "reason_codes": [],
+            "top3_reason_codes": {},
         }
 
     return {
@@ -220,4 +232,5 @@ def _fallback_decision(
             f"cluster: {cluster_profile}",
             "passes all safety constraints",
         ],
+        "top3_reason_codes": {},
     }

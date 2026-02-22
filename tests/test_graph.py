@@ -70,14 +70,29 @@ def _make_mock_llm():
     def mock_invoke(messages):
         content = messages[0].content if messages else ""
 
-        # Weight adjustment prompt
+        # Weight adjustment prompt (unique phrase from weight_adjustment.txt)
         if "weight_adjustment" in content.lower():
             return MagicMock(
                 content=json.dumps({"weight_adjustment": 1.1, "rationale": "mock adjustment"})
             )
 
-        # Reason codes prompt
-        if "reason codes" in content.lower() or "reason strings" in content.lower():
+        # Convergence decision prompt (unique phrase from convergence_decision.txt)
+        if "optimization loop" in content.lower():
+            # Return a converge=True decision so the graph terminates quickly
+            return MagicMock(
+                content=json.dumps({
+                    "converged": True,
+                    "confidence": 0.9,
+                    "medical_rationale": "Mock: converging immediately for test speed.",
+                    "new_weights": {"alpha": 2.0, "beta": 1.5, "gamma": 0.5, "delta": 1.0},
+                    "reason_codes": ["mock reason 1", "mock reason 2"],
+                    "top3_reason_codes": {},
+                    "pills_to_reconsider": [],
+                })
+            )
+
+        # Standalone reason codes prompt (unique phrase from reason_codes.txt)
+        if "reason strings" in content.lower():
             return MagicMock(
                 content=json.dumps([
                     "lowest risk in cluster",
@@ -126,6 +141,7 @@ class TestGraphIntegration:
                 "best_candidate": None,
                 "previous_best_utility": None,
                 "reason_codes": [],
+                "top3_reason_codes": None,
             }
 
             final_state = graph.invoke(initial_state)
@@ -162,6 +178,7 @@ class TestGraphIntegration:
                 "best_candidate": None,
                 "previous_best_utility": None,
                 "reason_codes": [],
+                "top3_reason_codes": None,
             }
 
             final_state = graph.invoke(initial_state)
@@ -199,6 +216,7 @@ class TestGraphIntegration:
                 "best_candidate": None,
                 "previous_best_utility": None,
                 "reason_codes": [],
+                "top3_reason_codes": None,
             }
 
             final_state = graph.invoke(initial_state)

@@ -31,6 +31,16 @@ def _load_prompt_template() -> str:
     return _PROMPT_PATH.read_text()
 
 
+def _strip_markdown_json(text: str) -> str:
+    """Remove markdown code fences that some LLMs wrap around JSON responses."""
+    text = text.strip()
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1] if "\n" in text else text[3:]
+        if text.endswith("```"):
+            text = text[:-3]
+    return text.strip()
+
+
 def run(state: SystemState) -> dict:
     """
     The agent assesses the risk of each candidate pill for this patient
@@ -191,7 +201,7 @@ def _assess_risks(
         )
 
         response = llm.invoke([HumanMessage(content=prompt)])
-        result = json.loads(response.content)
+        result = json.loads(_strip_markdown_json(response.content))
 
         logger.info(
             "✓ Risk assessment complete: %d pills scored, %d selected for simulation",
