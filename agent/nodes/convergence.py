@@ -12,6 +12,7 @@ This is the core agentic loop — the LLM controls the entire optimization.
 
 import json
 import logging
+import re
 from pathlib import Path
 
 from langchain_core.messages import HumanMessage
@@ -78,7 +79,9 @@ def run(state: SystemState) -> dict:
         current_weights=current_weights,
     )
 
-    converged = decision.get("converged", True)
+    # Default to False — a parse failure should NOT prematurely end the loop.
+    # Only converge when explicitly requested by the LLM or the fallback.
+    converged = decision.get("converged", False)
     medical_rationale = decision.get("medical_rationale", "")
 
     if not converged and iteration < MAX_ITERATIONS:
@@ -116,15 +119,28 @@ def run(state: SystemState) -> dict:
 # ── LLM invocation ─────────────────────────────────────────────────────────
 
 def _strip_markdown_json(text: str) -> str:
-    """Remove markdown code fences that some LLMs wrap around JSON responses."""
+    """Extract the first JSON object/array from an LLM response.
+
+    Handles:
+    - Bare JSON
+    - JSON inside ```json ... ``` fences (with or without preamble text)
+    - JSON inside ```plaintext ... ``` or any other fence language
+    - Fences that have trailing newlines before the closing ```
+    """
     text = text.strip()
-    if text.startswith("```"):
-        # Drop the opening fence line (```json or just ```)
-        text = text.split("\n", 1)[1] if "\n" in text else text[3:]
-        # Drop the closing fence
-        if text.endswith("```"):
-            text = text[:-3]
-    return text.strip()
+
+    # 1. Try to extract from a code fence anywhere in the text
+    fence_match = re.search(r"```(?:[\w+\-]*)\s*\n([\s\S]*?)\n?```", text)
+    if fence_match:
+        return fence_match.group(1).strip()
+
+    # 2. Try to find a raw JSON object / array anywhere in the text
+    json_match = re.search(r"(\{[\s\S]*\}|\[[\s\S]*\])", text)
+    if json_match:
+        return json_match.group(1).strip()
+
+    # 3. Return stripped original and let json.loads raise a clear error
+    return text
 
 
 def _ask_llm(
@@ -204,23 +220,38 @@ def _fallback_decision(
     best_candidate: str,
     cluster_profile: str,
 ) -> dict:
-    """Simple rule-based convergence when LLM is unavailable."""
+    """Simple rule-based convergence when LLM is unavailable.
+
+    Conservative policy: keep iterating until we hit MAX_ITERATIONS.
+    Only converge early if utility has truly plateaued AND we are past
+    the midpoint of allowed iterations.
+    """
     improvement = (
         abs(best_utility - previous_utility) if isinstance(previous_utility, (int, float)) else float("inf")
     )
-    should_continue = iteration < MAX_ITERATIONS and improvement > 0.01
+    # Give the agent at least half the budget before allowing a fallback-converge.
+    past_midpoint = iteration >= MAX_ITERATIONS // 2
+    plateau = improvement < 0.01
+    should_converge = (iteration >= MAX_ITERATIONS) or (past_midpoint and plateau)
 
-    if should_continue:
+    if not should_converge:
+        logger.warning(
+            "Fallback (iter %d): LLM parse failed — continuing with default weights.", iteration
+        )
         return {
             "converged": False,
-            "confidence": 0.5,
-            "medical_rationale": "Fallback: utility still improving, continue.",
+            "confidence": 0.4,
+            "medical_rationale": "Fallback: LLM unavailable, continuing iteration.",
             "new_weights": DEFAULT_WEIGHTS,
             "pills_to_reconsider": [],
             "reason_codes": [],
             "top3_reason_codes": {},
         }
 
+    logger.warning(
+        "Fallback (iter %d): converging by rule (plateau=%s, max_iter=%s).",
+        iteration, plateau, iteration >= MAX_ITERATIONS,
+    )
     return {
         "converged": True,
         "confidence": 0.5,

@@ -65,16 +65,35 @@ def run(state: SystemState) -> dict:
         weights["alpha"], weights["beta"], weights["gamma"], weights["delta"],
     )
 
-    utility_scores = {
+    raw_scores = {
         pill_id: compute_utility(result, weights)
         for pill_id, result in simulated_results.items()
     }
+
+    # Normalise raw scores to [0, 1] so the frontend display (score × 100)
+    # always yields a value in [0, 100].  Relative ranking is preserved.
+    raw_values = list(raw_scores.values())
+    min_raw = min(raw_values)
+    max_raw = max(raw_values)
+    if max_raw > min_raw:
+        utility_scores = {
+            pid: (s - min_raw) / (max_raw - min_raw)
+            for pid, s in raw_scores.items()
+        }
+    else:
+        # All pills identical — assign 0.5 to everyone
+        utility_scores = {pid: 0.5 for pid in raw_scores}
+
+    logger.info(
+        "Raw utility range: [%.4f, %.4f] → normalised to [0, 1]",
+        min_raw, max_raw,
+    )
 
     best_candidate = max(utility_scores, key=utility_scores.get)
 
     # Log top 5
     top5 = sorted(utility_scores.items(), key=lambda x: -x[1])[:5]
-    logger.info("Top utilities: %s", {k: round(v, 4) for k, v in top5})
+    logger.info("Top utilities (normalised): %s", {k: round(v, 4) for k, v in top5})
     logger.info("Best candidate: %s (utility=%.4f)", best_candidate, utility_scores[best_candidate])
 
     return {
