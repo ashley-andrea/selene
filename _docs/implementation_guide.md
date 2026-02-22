@@ -66,6 +66,15 @@ def get_llm():
             temperature=0
         )
 
+    elif provider == "groq":
+        # Groq — free-tier, OpenAI-compatible
+        return ChatOpenAI(
+            base_url="https://api.groq.com/openai/v1",
+            api_key=os.getenv("GROQ_API_KEY"),
+            model=os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile"),
+            temperature=0
+        )
+
     else:
         raise ValueError(f"Unknown LLM_PROVIDER: {provider}")
 ```
@@ -79,13 +88,18 @@ Use `claude-sonnet-4-6` (not Opus) for deployment. The agent's reasoning tasks a
 
 All configuration is environment-variable driven. Create `.env` files for each environment — never commit secrets.
 
-### `.env.local` (development with Crusoe)
+### `.env.local` (development with Crusoe or Groq)
 
 ```bash
-# Agent
+# Agent — Crusoe (dev/staging)
 LLM_PROVIDER=crusoe
 CRUSOE_API_KEY=your_crusoe_api_key
 CRUSOE_MODEL=meta-llama/Llama-3.3-70B-Instruct
+
+# Or Groq (free tier)
+# LLM_PROVIDER=groq
+# GROQ_API_KEY=your_groq_api_key
+# GROQ_MODEL=llama-3.1-70b-versatile
 
 # Model APIs (Red Hat OpenShift)
 CLUSTER_API_URL=http://localhost:8001/predict   # or staging URL
@@ -605,6 +619,7 @@ No code changes needed. LangGraph picks this up automatically.
 | Persistent state | LangGraph `StateGraph` with `SystemState` TypedDict |
 | LLM switching (local → Claude) | Factory pattern in `llm.py` driven by `LLM_PROVIDER` env var |
 | Dev/staging LLM | Crusoe Managed Inference (`meta-llama/Llama-3.3-70B-Instruct`) via OpenAI-compat endpoint |
+| Free-tier testing | Groq (`llama-3.1-70b-versatile`) via OpenAI-compat endpoint |
 | Production LLM | `claude-sonnet-4-6` via `langchain-anthropic` |
 | HTTP model API calls | `httpx` async clients in `agent/tools/` |
 | Concurrent simulation | `asyncio.gather` across candidate pool |

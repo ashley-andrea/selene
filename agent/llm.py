@@ -5,6 +5,7 @@ environment variable.
 Supported providers:
   - claude  → langchain-anthropic (production)
   - crusoe  → langchain-openai with Crusoe Managed Inference endpoint (dev/staging)
+  - groq    → langchain-openai with Groq endpoint (free tier dev)
   - ollama  → langchain-ollama (local)
 
 Default is 'claude' for production safety.
@@ -37,6 +38,14 @@ def get_llm():
             base_url="https://api.crusoe.ai/v1",
             api_key=os.getenv("CRUSOE_API_KEY"),
             model=os.getenv("CRUSOE_MODEL", "meta-llama/Llama-3.3-70B-Instruct"),
+            temperature=0,
+        )
+
+    elif provider == "groq":
+        return ChatOpenAI(
+            base_url="https://api.groq.com/openai/v1",
+            api_key=os.getenv("GROQ_API_KEY"),
+            model=os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile"),
             temperature=0,
         )
 
