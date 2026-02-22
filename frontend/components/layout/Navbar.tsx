@@ -18,10 +18,10 @@ export default function Navbar() {
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
         background: scrolled
-          ? "rgba(26, 0, 46, 0.92)"
+          ? "rgba(245, 243, 236, 0.95)"
           : "transparent",
         backdropFilter: scrolled ? "blur(16px)" : "none",
-        borderBottom: scrolled ? "1px solid rgba(119,103,164,0.2)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(53,40,90,0.1)" : "none",
       }}
     >
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
@@ -54,8 +54,8 @@ export default function Navbar() {
             </svg>
           </div>
           <span
-            className="font-display text-xl tracking-wide text-cream group-hover:glow-text transition-all"
-            style={{ fontFamily: "Catchye, 'Cormorant Garamond', Georgia, serif" }}
+            className="font-display text-xl tracking-wide group-hover:glow-text transition-all"
+            style={{ fontFamily: "'Cormorant Garamond', Georgia, serif", color: "#1A002E" }}
           >
             Selene
           </span>
@@ -63,10 +63,10 @@ export default function Navbar() {
 
         {/* Links */}
         <div className="flex items-center gap-1">
-          <Link href="#how-it-works" className="btn-ghost text-sm hidden sm:block">
+          <Link href="/#how-it-works" className="btn-ghost text-sm hidden sm:block">
             How it works
           </Link>
-          <Link href="#about" className="btn-ghost text-sm hidden sm:block">
+          <Link href="/#about" className="btn-ghost text-sm hidden sm:block">
             About
           </Link>
           <Link href="/intake" className="btn-primary text-sm ml-2">

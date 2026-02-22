@@ -9,15 +9,14 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from "recharts";
 import type { PillRecommendation, FeatureGroup } from "@/lib/types";
 import { FEATURE_GROUPS, PILL_SHORT } from "@/lib/types";
 
-/* ── Colour per pill rank ───────────────────────────────────────────────── */
-const PILL_COLORS  = ["#DDD8C4", "#7767A4", "#A78BFA"];
+/* ── Pill line styles (dash only — colour comes from feature, not pill) ── */
 const PILL_DASHES  = ["0", "6 3", "2 2"];
-const PILL_OPAQUE  = [1, 0.85, 0.7];
+const PILL_OPAQUE  = [1, 0.8, 0.65];
+const PILL_LEGEND_COLORS = ["#1A002E", "#7767A4", "#9B8BC4"];
 
 /* ── Custom tooltip ─────────────────────────────────────────────────────── */
 function CustomTooltip({
@@ -34,29 +33,34 @@ function CustomTooltip({
     <div
       className="rounded-xl px-4 py-3 space-y-1.5 text-xs font-body"
       style={{
-        background: "rgba(26,0,46,0.95)",
-        border: "1px solid rgba(119,103,164,0.35)",
+        background: "rgba(255,255,255,0.98)",
+        border: "1px solid rgba(53,40,90,0.15)",
         backdropFilter: "blur(12px)",
+        boxShadow: "0 4px 24px rgba(26,0,46,0.1)",
       }}
     >
       <p
         className="font-semibold mb-2"
-        style={{ color: "rgba(221,216,196,0.6)" }}
+        style={{ color: "rgba(26,0,46,0.55)" }}
       >
         Month {label}
       </p>
-      {payload.map((p) => (
-        <div key={p.name} className="flex items-center gap-2">
-          <span
-            className="inline-block w-3 h-0.5"
-            style={{ background: p.color }}
-          />
-          <span style={{ color: "rgba(221,216,196,0.7)" }}>{p.name}</span>
-          <span className="font-semibold ml-auto pl-4" style={{ color: p.color }}>
-            {(p.value * 100).toFixed(1)}%
-          </span>
-        </div>
-      ))}
+      {payload.map((p) => {
+        const pct = p.value * 100;
+        const formatted = pct < 0.1 ? `${pct.toFixed(3)}%` : `${pct.toFixed(1)}%`;
+        return (
+          <div key={p.name} className="flex items-center gap-2">
+            <span
+              className="inline-block w-3 h-0.5"
+              style={{ background: p.color }}
+            />
+            <span style={{ color: "rgba(26,0,46,0.65)" }}>{p.name}</span>
+            <span className="font-semibold ml-auto pl-4" style={{ color: p.color }}>
+              {formatted}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -75,7 +79,7 @@ export default function TrajectoryChart({ recommendations }: Props) {
   const [isPlaying, setIsPlaying] = useState(false);
   const rafRef = useRef<number | null>(null);
   const startRef = useRef<number>(0);
-  const ANIM_DURATION = 3600; // ms for full 12-month reveal
+  const ANIM_DURATION = 3600;
 
   /* Switch group — reset feature selection to all-in-group */
   const switchGroup = useCallback((g: FeatureGroup) => {
@@ -89,7 +93,7 @@ export default function TrajectoryChart({ recommendations }: Props) {
     setActiveFeatures((prev) => {
       const next = new Set(prev);
       if (next.has(key)) {
-        if (next.size === 1) return prev; // keep at least one
+        if (next.size === 1) return prev;
         next.delete(key);
       } else {
         next.add(key);
@@ -126,7 +130,6 @@ export default function TrajectoryChart({ recommendations }: Props) {
     };
   }, [isPlaying]);
 
-  /* Build chart data — full 12 months; mask handles reveal */
   const group = FEATURE_GROUPS.find((g) => g.id === activeGroupId)!;
   const months = recommendations[0]?.months ?? [1,2,3,4,5,6,7,8,9,10,11,12];
 
@@ -146,20 +149,7 @@ export default function TrajectoryChart({ recommendations }: Props) {
     );
   }, [months, recommendations, group, activeFeatures]);
 
-  /* Satisfaction data */
-  const satisfactionData = useMemo(
-    () =>
-      months.map((m, mi) =>
-        Object.fromEntries([
-          ["month", m],
-          ...recommendations.map((p, pi) => [`sat__${pi}`, p.satisfaction[mi] ?? 0]),
-        ])
-      ),
-    [months, recommendations]
-  );
-
   const displayMonth = Math.round(revealPct * 12);
-  const isRisk = activeGroupId === "risk";
 
   return (
     <div className="space-y-6">
@@ -174,10 +164,9 @@ export default function TrajectoryChart({ recommendations }: Props) {
               onClick={() => switchGroup(g)}
               className="text-xs font-body font-medium px-3 py-1.5 rounded-full transition-all duration-200"
               style={{
-                background: active ? g.color + "25" : "rgba(53,40,90,0.6)",
-                color: active ? g.color : "rgba(221,216,196,0.45)",
-                border: `1px solid ${active ? g.color + "55" : "rgba(119,103,164,0.2)"}`,
-                boxShadow: active ? `0 0 12px ${g.color}33` : "none",
+                background: active ? g.color + "18" : "rgba(53,40,90,0.06)",
+                color: active ? g.color : "rgba(26,0,46,0.45)",
+                border: `1px solid ${active ? g.color + "55" : "rgba(53,40,90,0.15)"}`,
               }}
             >
               {g.label}
@@ -198,9 +187,9 @@ export default function TrajectoryChart({ recommendations }: Props) {
                 onClick={() => toggleFeature(f.key)}
                 className="text-xs font-body px-2.5 py-1 rounded-full transition-all"
                 style={{
-                  background: on ? "rgba(221,216,196,0.12)" : "transparent",
-                  color: on ? "#DDD8C4" : "rgba(221,216,196,0.3)",
-                  border: "1px solid rgba(221,216,196,0.18)",
+                  background: on ? f.color + "18" : "transparent",
+                  color: on ? f.color : "rgba(26,0,46,0.35)",
+                  border: `1px solid ${on ? f.color + "55" : "rgba(26,0,46,0.15)"}`,
                 }}
               >
                 {f.label}
@@ -210,21 +199,13 @@ export default function TrajectoryChart({ recommendations }: Props) {
         </div>
       )}
 
-      {/* Serious events scale note */}
-      {isRisk && (
-        <p className="text-xs font-body" style={{ color: "rgba(221,216,196,0.4)" }}>
-          Note: serious event probabilities are very small (&lt;1%). The
-          y-axis is automatically scaled to make differences visible.
-        </p>
-      )}
-
       {/* ── Main chart ─────────────────────────────────────────────────── */}
       <div className="relative rounded-2xl overflow-hidden" style={{ height: 340 }}>
-        {/* Mask for progressive reveal */}
+        {/* Progressive reveal mask (matches light page background) */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
-            background: `linear-gradient(to right, transparent ${revealPct * 100}%, rgba(26,0,46,0.96) ${Math.min(revealPct * 100 + 3, 100)}%)`,
+            background: `linear-gradient(to right, transparent ${revealPct * 100}%, #F5F3EC ${Math.min(revealPct * 100 + 3, 100)}%)`,
             zIndex: 2,
           }}
         />
@@ -236,39 +217,31 @@ export default function TrajectoryChart({ recommendations }: Props) {
           >
             <CartesianGrid
               strokeDasharray="3 3"
-              stroke="rgba(53,40,90,0.9)"
+              stroke="rgba(53,40,90,0.1)"
               vertical={false}
             />
             <XAxis
               dataKey="month"
-              tick={{ fill: "rgba(221,216,196,0.4)", fontSize: 11 }}
+              tick={{ fill: "rgba(26,0,46,0.4)", fontSize: 11 }}
               tickLine={false}
-              axisLine={{ stroke: "rgba(119,103,164,0.2)" }}
+              axisLine={{ stroke: "rgba(53,40,90,0.15)" }}
               label={{
                 value: "Month",
                 position: "insideBottom",
                 offset: -2,
-                fill: "rgba(221,216,196,0.3)",
+                fill: "rgba(26,0,46,0.3)",
                 fontSize: 10,
               }}
             />
             <YAxis
-              tickFormatter={(v: number) =>
-                isRisk ? `${(v * 100).toFixed(2)}%` : `${(v * 100).toFixed(0)}%`
-              }
-              tick={{ fill: "rgba(221,216,196,0.4)", fontSize: 10 }}
+              domain={[0, 1]}
+              ticks={[0, 0.25, 0.5, 0.75, 1]}
+              tickFormatter={(v: number) => `${(v * 100).toFixed(0)}%`}
+              tick={{ fill: "rgba(26,0,46,0.4)", fontSize: 10 }}
               tickLine={false}
               axisLine={false}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Legend
-              wrapperStyle={{ paddingTop: 12 }}
-              formatter={(value: string) => (
-                <span className="font-body text-xs" style={{ color: "rgba(221,216,196,0.6)" }}>
-                  {value}
-                </span>
-              )}
-            />
 
             {recommendations.flatMap((pill, pi) =>
               group.features
@@ -279,7 +252,7 @@ export default function TrajectoryChart({ recommendations }: Props) {
                     type="monotone"
                     dataKey={`${f.key}__${pi}`}
                     name={`${f.label} — ${PILL_SHORT[pill.pill_id] ?? pill.pill_id}`}
-                    stroke={group.color}
+                    stroke={f.color}
                     strokeWidth={pi === 0 ? 2 : 1.5}
                     strokeDasharray={PILL_DASHES[pi]}
                     strokeOpacity={PILL_OPAQUE[pi]}
@@ -292,30 +265,36 @@ export default function TrajectoryChart({ recommendations }: Props) {
         </ResponsiveContainer>
       </div>
 
-      {/* ── Pill legend ─────────────────────────────────────────────────── */}
-      <div className="flex flex-wrap gap-4 justify-center">
+      {/* ── Pill line-style legend ───────────────────────────────────────── */}
+      <div className="flex flex-wrap gap-5 justify-center">
         {recommendations.map((pill, i) => (
           <div key={pill.pill_id} className="flex items-center gap-2">
-            <svg width="24" height="6">
+            <svg width="28" height="8">
               <line
                 x1="0"
-                y1="3"
-                x2="24"
-                y2="3"
-                stroke={PILL_COLORS[i]}
+                y1="4"
+                x2="28"
+                y2="4"
+                stroke={PILL_LEGEND_COLORS[i]}
                 strokeWidth={i === 0 ? 2 : 1.5}
                 strokeDasharray={PILL_DASHES[i]}
-                strokeOpacity={PILL_OPAQUE[i]}
+                strokeOpacity={1}
               />
             </svg>
             <span
               className="font-body text-xs"
-              style={{ color: PILL_COLORS[i] }}
+              style={{ color: PILL_LEGEND_COLORS[i] }}
             >
               {PILL_SHORT[pill.pill_id] ?? pill.pill_id}
             </span>
           </div>
         ))}
+        <span
+          className="font-body text-xs self-center"
+          style={{ color: "rgba(26,0,46,0.35)" }}
+        >
+          · line style = pill, colour = symptom
+        </span>
       </div>
 
       {/* ── Play controls ───────────────────────────────────────────────── */}
@@ -325,9 +304,9 @@ export default function TrajectoryChart({ recommendations }: Props) {
           onClick={() => (isPlaying ? setIsPlaying(false) : play())}
           className="flex items-center gap-2 rounded-full px-5 py-2 text-sm font-body font-medium transition-all"
           style={{
-            background: isPlaying ? "rgba(119,103,164,0.2)" : "#7767A4",
-            color: "#DDD8C4",
-            border: "1px solid rgba(119,103,164,0.4)",
+            background: isPlaying ? "rgba(53,40,90,0.08)" : "#7767A4",
+            color: isPlaying ? "#1A002E" : "#F5F3EC",
+            border: "1px solid rgba(53,40,90,0.2)",
           }}
         >
           {isPlaying ? (
@@ -360,87 +339,63 @@ export default function TrajectoryChart({ recommendations }: Props) {
               setIsPlaying(false);
               setRevealPct(parseFloat(e.target.value));
             }}
-            className="flex-1 accent-[#7767A4] h-1"
+            className="flex-1 h-1"
             style={{ accentColor: "#7767A4" }}
           />
           <span
             className="text-xs font-body w-16 text-right"
-            style={{ color: "rgba(221,216,196,0.5)" }}
+            style={{ color: "rgba(26,0,46,0.45)" }}
           >
             {displayMonth < 1 ? "Month —" : `Month ${displayMonth}`}
           </span>
         </div>
       </div>
 
-      {/* ── Satisfaction chart ──────────────────────────────────────────── */}
+      {/* ── Satisfaction scores (static per pill) ───────────────────────── */}
       <div>
-        <p className="section-label mb-4">Predicted satisfaction score (1–10)</p>
-        <div className="relative rounded-2xl overflow-hidden" style={{ height: 200 }}>
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              background: `linear-gradient(to right, transparent ${revealPct * 100}%, rgba(26,0,46,0.96) ${Math.min(revealPct * 100 + 3, 100)}%)`,
-              zIndex: 2,
-            }}
-          />
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={satisfactionData}
-              margin={{ top: 8, right: 20, bottom: 0, left: -10 }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke="rgba(53,40,90,0.9)"
-                vertical={false}
-              />
-              <XAxis
-                dataKey="month"
-                tick={{ fill: "rgba(221,216,196,0.4)", fontSize: 10 }}
-                tickLine={false}
-                axisLine={{ stroke: "rgba(119,103,164,0.2)" }}
-              />
-              <YAxis
-                domain={[1, 10]}
-                tickFormatter={(v: number) => `${v}`}
-                tick={{ fill: "rgba(221,216,196,0.4)", fontSize: 10 }}
-                tickLine={false}
-                axisLine={false}
-              />
-              <Tooltip
-                formatter={(
-                  v: number | string | undefined,
-                  name: string | undefined
-                ) => [
-                  typeof v === "number" ? v.toFixed(1) : String(v ?? ""),
-                  (name ?? "").replace("sat__", "Pill "),
-                ]}
-                contentStyle={{
-                  background: "rgba(26,0,46,0.95)",
-                  border: "1px solid rgba(119,103,164,0.35)",
-                  borderRadius: 12,
-                  fontFamily: "Epilogue, sans-serif",
-                  fontSize: 12,
-                  color: "#DDD8C4",
+        <p className="section-label mb-3">Predicted satisfaction score (1–10)</p>
+        <div className="grid grid-cols-3 gap-3">
+          {recommendations.map((pill, i) => {
+            const sat = pill.satisfaction[pill.satisfaction.length - 1] ?? 0;
+            const color = PILL_LEGEND_COLORS[i];
+            return (
+              <div
+                key={pill.pill_id}
+                className="rounded-xl p-4 text-center"
+                style={{
+                  background: "rgba(255,255,255,0.7)",
+                  border: `1px solid ${color}33`,
                 }}
-              />
-              {recommendations.map((pill, pi) => (
-                <Line
-                  key={`sat__${pi}`}
-                  type="monotone"
-                  dataKey={`sat__${pi}`}
-                  name={PILL_SHORT[pill.pill_id] ?? pill.pill_id}
-                  stroke={PILL_COLORS[pi]}
-                  strokeWidth={pi === 0 ? 2 : 1.5}
-                  strokeDasharray={PILL_DASHES[pi]}
-                  strokeOpacity={PILL_OPAQUE[pi]}
-                  dot={false}
-                  isAnimationActive={false}
-                />
-              ))}
-            </LineChart>
-          </ResponsiveContainer>
+              >
+                <p
+                  className="font-body text-xs mb-1"
+                  style={{ color: "rgba(26,0,46,0.45)" }}
+                >
+                  {PILL_SHORT[pill.pill_id] ?? pill.pill_id}
+                </p>
+                <p
+                  className="font-display font-semibold"
+                  style={{
+                    fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    fontSize: "2rem",
+                    lineHeight: 1,
+                    color,
+                  }}
+                >
+                  {sat.toFixed(1)}
+                </p>
+                <p
+                  className="font-body text-xs mt-1"
+                  style={{ color: "rgba(26,0,46,0.3)" }}
+                >
+                  / 10
+                </p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
   );
 }
+

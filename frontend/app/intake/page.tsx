@@ -36,7 +36,7 @@ export default function IntakePage() {
         className="fixed inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 100% 70% at 50% -10%, #35285A 0%, #1A002E 60%)",
+            "radial-gradient(ellipse 100% 70% at 50% -10%, rgba(53,40,90,0.07) 0%, #F5F3EC 60%)",
           zIndex: 0,
         }}
       />
@@ -54,14 +54,14 @@ export default function IntakePage() {
           <h1
             className="font-display mb-2"
             style={{
-              fontFamily: "Catchye, 'Cormorant Garamond', Georgia, serif",
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: "clamp(2rem, 6vw, 3rem)",
-              color: "#DDD8C4",
+              color: "#1A002E",
             }}
           >
             Your profile
           </h1>
-          <p className="font-body text-sm" style={{ color: "rgba(221,216,196,0.5)" }}>
+          <p className="font-body text-sm" style={{ color: "rgba(26,0,46,0.5)" }}>
             Only your age is required. Provide as much detail as you have.
           </p>
         </div>
@@ -69,7 +69,7 @@ export default function IntakePage() {
         {/* Tab switcher */}
         <div
           className="flex rounded-xl p-1 mb-8"
-          style={{ background: "rgba(53,40,90,0.5)" }}
+          style={{ background: "rgba(53,40,90,0.08)" }}
         >
           {(["pdf", "manual"] as Tab[]).map((t) => (
             <button
@@ -79,10 +79,10 @@ export default function IntakePage() {
               className="flex-1 py-2.5 rounded-lg text-sm font-body font-medium transition-all"
               style={{
                 background: tab === t ? "#7767A4" : "transparent",
-                color: tab === t ? "#DDD8C4" : "rgba(221,216,196,0.45)",
+                color: tab === t ? "#F5F3EC" : "rgba(26,0,46,0.45)",
               }}
             >
-              {t === "pdf" ? "📄 Upload medical record" : "✏️ Enter manually"}
+              {t === "pdf" ? "Upload medical record" : "Enter manually"}
             </button>
           ))}
         </div>

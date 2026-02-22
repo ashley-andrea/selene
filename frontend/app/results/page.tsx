@@ -50,9 +50,9 @@ function Section({
       <h2
         className="font-display mb-6"
         style={{
-          fontFamily: "Catchye, 'Cormorant Garamond', Georgia, serif",
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
           fontSize: "clamp(1.4rem, 3vw, 2rem)",
-          color: "#DDD8C4",
+          color: "#1A002E",
         }}
       >
         {title}
@@ -89,7 +89,7 @@ export default function ResultsPage() {
     return (
       <main
         className="relative min-h-screen flex flex-col items-center justify-center px-6 text-center"
-        style={{ background: "#1A002E" }}
+        style={{ background: "#F5F3EC" }}
       >
         <Stars />
         <div
@@ -103,14 +103,14 @@ export default function ResultsPage() {
           <h2
             className="font-display mb-3"
             style={{
-              fontFamily: "Catchye, 'Cormorant Garamond', Georgia, serif",
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: "1.6rem",
-              color: "#DDD8C4",
+              color: "#1A002E",
             }}
           >
             Something went wrong
           </h2>
-          <p className="font-body text-sm mb-6" style={{ color: "rgba(221,216,196,0.55)" }}>
+          <p className="font-body text-sm mb-6" style={{ color: "rgba(26,0,46,0.55)" }}>
             {error}
           </p>
           <button
@@ -127,7 +127,7 @@ export default function ResultsPage() {
   /* ── Loading state ────────────────────────────────────────────────────── */
   if (!results) {
     return (
-      <main className="relative min-h-screen" style={{ background: "#1A002E" }}>
+      <main className="relative min-h-screen" style={{ background: "#F5F3EC" }}>
         <Stars />
         <div className="relative z-10">
           <LoadingMoon />
@@ -146,7 +146,7 @@ export default function ResultsPage() {
         className="fixed inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 80% 50% at 50% 0%, #35285A 0%, #1A002E 55%)",
+            "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(53,40,90,0.06) 0%, #F5F3EC 55%)",
           zIndex: 0,
         }}
       />
@@ -163,9 +163,9 @@ export default function ResultsPage() {
           <h1
             className="font-display glow-text"
             style={{
-              fontFamily: "Catchye, 'Cormorant Garamond', Georgia, serif",
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: "clamp(2rem, 6vw, 3.5rem)",
-              color: "#DDD8C4",
+              color: "#1A002E",
               lineHeight: 1,
             }}
           >
@@ -190,16 +190,16 @@ export default function ResultsPage() {
           <div
             className="rounded-2xl p-6 md:p-8"
             style={{
-              background: "rgba(26,0,46,0.7)",
-              border: "1px solid rgba(119,103,164,0.2)",
+              background: "rgba(255,255,255,0.75)",
+              border: "1px solid rgba(53,40,90,0.1)",
             }}
           >
             <p
               className="font-body text-sm mb-6"
-              style={{ color: "rgba(221,216,196,0.5)" }}
+              style={{ color: "rgba(26,0,46,0.5)" }}
             >
               Select a feature group, choose individual factors, then press{" "}
-              <strong style={{ color: "#DDD8C4" }}>Play</strong> to animate how
+              <strong style={{ color: "#1A002E" }}>Play</strong> to animate how
               each metric evolves over 12 months for all three pill options.
             </p>
             <TrajectoryChart recommendations={results.recommendations} />

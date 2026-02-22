@@ -1,7 +1,7 @@
 "use client";
 
 import type { PillRecommendation } from "@/lib/types";
-import { PILL_SHORT } from "@/lib/types";
+import { PILL_SHORT, PILL_GENERIC } from "@/lib/types";
 
 function RiskBar({
   value,
@@ -18,7 +18,7 @@ function RiskBar({
       <div className="flex justify-between mb-1">
         <span
           className="font-body text-xs"
-          style={{ color: "rgba(221,216,196,0.55)" }}
+          style={{ color: "rgba(26,0,46,0.5)" }}
         >
           {label}
         </span>
@@ -28,14 +28,13 @@ function RiskBar({
       </div>
       <div
         className="h-1.5 rounded-full overflow-hidden"
-        style={{ background: "rgba(53,40,90,0.8)" }}
+        style={{ background: "rgba(53,40,90,0.08)" }}
       >
         <div
           className="h-full rounded-full transition-all duration-1000"
           style={{
             width: `${Math.max(pct, 0.5)}%`,
             background: color,
-            boxShadow: `0 0 6px ${color}88`,
           }}
         />
       </div>
@@ -43,7 +42,7 @@ function RiskBar({
   );
 }
 
-const RANK_COLORS = ["#DDD8C4", "#7767A4", "#9B8BC4"];
+const RANK_BORDER_COLORS = ["#7767A4", "rgba(53,40,90,0.18)", "rgba(53,40,90,0.12)"];
 
 interface Props {
   recommendations: PillRecommendation[];
@@ -53,8 +52,8 @@ export default function RiskCards({ recommendations }: Props) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {recommendations.map((pill, i) => {
-        const color  = RANK_COLORS[i] ?? "#9B8BC4";
         const isTop  = pill.rank === 1;
+        const border = RANK_BORDER_COLORS[i] ?? "rgba(53,40,90,0.12)";
 
         return (
           <div
@@ -62,11 +61,10 @@ export default function RiskCards({ recommendations }: Props) {
             className="rounded-2xl p-6 space-y-5 relative overflow-hidden"
             style={{
               background: isTop
-                ? "rgba(119,103,164,0.12)"
-                : "rgba(53,40,90,0.35)",
-              border: isTop
-                ? "1px solid rgba(221,216,196,0.3)"
-                : "1px solid rgba(119,103,164,0.18)",
+                ? "rgba(119,103,164,0.06)"
+                : "rgba(255,255,255,0.75)",
+              border: `1px solid ${border}`,
+              boxShadow: isTop ? "0 2px 16px rgba(119,103,164,0.12)" : "none",
             }}
           >
             {/* Rank badge */}
@@ -74,24 +72,30 @@ export default function RiskCards({ recommendations }: Props) {
               <div>
                 <span
                   className="section-label block mb-1"
-                  style={{ color: "rgba(221,216,196,0.4)" }}
+                  style={{ color: "rgba(26,0,46,0.4)" }}
                 >
                   Rank {pill.rank}
                 </span>
                 <h3
                   className="font-body font-semibold text-base leading-tight"
-                  style={{ color }}
+                  style={{ color: "#1A002E" }}
                 >
                   {PILL_SHORT[pill.pill_id] ?? pill.pill_id}
                 </h3>
+                <p
+                  className="font-body text-xs mt-0.5"
+                  style={{ color: "rgba(26,0,46,0.45)" }}
+                >
+                  {PILL_GENERIC[pill.pill_id] ?? ""}
+                </p>
               </div>
               {isTop && (
                 <span
                   className="text-xs font-body px-2 py-0.5 rounded-full"
                   style={{
-                    background: "rgba(110,231,183,0.15)",
-                    color: "#6EE7B7",
-                    border: "1px solid rgba(110,231,183,0.25)",
+                    background: "rgba(119,103,164,0.1)",
+                    color: "#7767A4",
+                    border: "1px solid rgba(119,103,164,0.3)",
                   }}
                 >
                   Best match
@@ -99,24 +103,24 @@ export default function RiskCards({ recommendations }: Props) {
               )}
             </div>
 
-            {/* Utility score */}
+            {/* Suitability score */}
             <div className="flex items-end gap-1">
               <span
-                className="font-display"
+                className="font-display font-semibold"
                 style={{
-                  fontFamily: "Catchye, 'Cormorant Garamond', serif",
+                  fontFamily: "'Cormorant Garamond', Georgia, serif",
                   fontSize: "2.2rem",
                   lineHeight: 1,
-                  color,
+                  color: isTop ? "#7767A4" : "#35285A",
                 }}
               >
                 {(pill.utility_score * 100).toFixed(0)}
               </span>
               <span
                 className="font-body text-xs mb-1"
-                style={{ color: "rgba(221,216,196,0.45)" }}
+                style={{ color: "rgba(26,0,46,0.4)" }}
               >
-                / 100 utility
+                / 100 suitability
               </span>
             </div>
 
@@ -125,22 +129,22 @@ export default function RiskCards({ recommendations }: Props) {
               <RiskBar
                 label="Severe adverse event"
                 value={pill.severe_risk}
-                color="#F87171"
+                color="#DC2626"
               />
               <RiskBar
                 label="Discontinuation risk"
                 value={pill.predicted_discontinuation}
-                color="#FCD34D"
+                color="#B45309"
               />
               <RiskBar
                 label="Mild side-effect score"
                 value={pill.mild_side_effect_score}
-                color="#C084FC"
+                color="#7767A4"
               />
               <RiskBar
                 label="Contraceptive efficacy"
                 value={pill.contraceptive_effectiveness}
-                color="#6EE7B7"
+                color="#059669"
               />
             </div>
           </div>

@@ -66,7 +66,7 @@ export default function HomePage() {
         className="fixed inset-0 pointer-events-none"
         style={{
           background:
-            "radial-gradient(ellipse 80% 60% at 50% 0%, #35285A 0%, #1A002E 55%, #0D0017 100%)",
+            "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(53,40,90,0.06) 0%, #F5F3EC 55%, #EFEDE5 100%)",
           zIndex: 0,
         }}
       />
@@ -114,11 +114,11 @@ export default function HomePage() {
         <h1
           className="font-display glow-text mb-3"
           style={{
-            fontFamily: "Catchye, 'Cormorant Garamond', Georgia, serif",
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontSize: "clamp(3.5rem, 10vw, 7rem)",
             fontWeight: 400,
             lineHeight: 1,
-            color: "#DDD8C4",
+            color: "#1A002E",
             letterSpacing: "0.04em",
           }}
         >
@@ -130,7 +130,7 @@ export default function HomePage() {
           className="font-body mb-12"
           style={{
             fontSize: "clamp(0.85rem, 2vw, 1.05rem)",
-            color: "rgba(221, 216, 196, 0.55)",
+            color: "rgba(26, 0, 46, 0.45)",
             letterSpacing: "0.18em",
             textTransform: "uppercase",
           }}
@@ -146,7 +146,7 @@ export default function HomePage() {
         {/* Scroll hint */}
         <div
           className="absolute bottom-10 flex flex-col items-center gap-1.5"
-          style={{ color: "rgba(221,216,196,0.3)" }}
+          style={{ color: "rgba(26,0,46,0.3)" }}
         >
           <span className="text-xs tracking-widest uppercase">scroll</span>
           <svg width="14" height="20" viewBox="0 0 14 20" fill="none">
@@ -183,9 +183,9 @@ export default function HomePage() {
           <h2
             className="font-display text-center mb-16"
             style={{
-              fontFamily: "Catchye, 'Cormorant Garamond', Georgia, serif",
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
               fontSize: "clamp(2rem, 5vw, 3.2rem)",
-              color: "#DDD8C4",
+              color: "#1A002E",
             }}
           >
             From profile to personalised plan
@@ -213,20 +213,20 @@ export default function HomePage() {
                 <span
                   className="font-display block mb-4"
                   style={{
-                    fontFamily: "Catchye, 'Cormorant Garamond', Georgia, serif",
+                    fontFamily: "'Cormorant Garamond', Georgia, serif",
                     fontSize: "2.5rem",
-                    color: "rgba(119,103,164,0.5)",
+                    color: "rgba(119,103,164,0.6)",
                   }}
                 >
                   {step.num}
                 </span>
                 <h3
-                  className="font-body font-semibold text-cream mb-2 text-lg"
-                  style={{ color: "#DDD8C4" }}
+                  className="font-body font-semibold mb-2 text-lg"
+                  style={{ color: "#1A002E" }}
                 >
                   {step.title}
                 </h3>
-                <p className="font-body text-sm" style={{ color: "rgba(221,216,196,0.6)" }}>
+                <p className="font-body text-sm" style={{ color: "rgba(26,0,46,0.6)" }}>
                   {step.body}
                 </p>
               </div>
@@ -238,21 +238,30 @@ export default function HomePage() {
       {/* ── About / disclaimer ────────────────────────────────────────────── */}
       <section
         id="about"
-        className="relative py-20 px-6"
+        className="relative py-24 px-6"
         style={{ zIndex: 1 }}
       >
-        <div
-          className="max-w-2xl mx-auto text-center card p-12"
-        >
-          <p className="section-label mb-4">Transparency</p>
+        <div className="max-w-xl mx-auto text-center">
+          <p className="section-label mb-6">Transparency</p>
           <p
-            className="font-body text-sm leading-relaxed"
-            style={{ color: "rgba(221,216,196,0.65)" }}
+            className="font-display"
+            style={{
+              fontFamily: "'Cormorant Garamond', Georgia, serif",
+              fontSize: "clamp(1.35rem, 3vw, 1.75rem)",
+              fontWeight: 400,
+              lineHeight: 1.55,
+              color: "#1A002E",
+            }}
           >
             Selene is a clinical decision-support tool, not a replacement for a
-            healthcare provider. All recommendations should be reviewed with your
-            doctor or pharmacist before starting, stopping, or switching
-            contraception.
+            healthcare provider.
+          </p>
+          <p
+            className="font-body text-sm mt-5 leading-relaxed"
+            style={{ color: "rgba(26,0,46,0.5)" }}
+          >
+            All recommendations should be reviewed with your doctor or pharmacist
+            before starting, stopping, or switching contraception.
           </p>
         </div>
       </section>
@@ -261,15 +270,15 @@ export default function HomePage() {
       <footer
         className="relative py-10 px-6 text-center"
         style={{
-          borderTop: "1px solid rgba(119,103,164,0.12)",
-          color: "rgba(221,216,196,0.3)",
+          borderTop: "1px solid rgba(53,40,90,0.1)",
+          color: "rgba(26,0,46,0.35)",
           fontSize: "0.75rem",
           zIndex: 1,
         }}
       >
         <span
           className="font-display mr-2"
-          style={{ fontFamily: "Catchye, 'Cormorant Garamond', serif" }}
+          style={{ fontFamily: "'Cormorant Garamond', serif" }}
         >
           Selene
         </span>

@@ -6,17 +6,6 @@
 
 @import "tailwindcss";
 
-/* Catchye custom font — drop Catchye.woff2 + Catchye.woff into /public/fonts/ */
-@font-face {
-  font-family: "Catchye";
-  src:
-    url("/fonts/Catchye.woff2") format("woff2"),
-    url("/fonts/Catchye.woff") format("woff");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* ── Tailwind v4 theme ───────────────────────────────────────────────────── */
 @theme {
   --color-cream:     #DDD8C4;
@@ -25,7 +14,7 @@
   --color-lp:        #7767A4;
   --color-lp-bright: #9B8BC4;
 
-  --font-display: "Catchye", "Cormorant Garamond", Georgia, serif;
+  --font-display: "Cormorant Garamond", Georgia, serif;
   --font-body:    "Epilogue", system-ui, sans-serif;
 }
 
@@ -34,8 +23,8 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: #1A002E;
-  color: #DDD8C4;
+  background-color: #F5F3EC;
+  color: #1A002E;
   font-family: "Epilogue", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
@@ -43,22 +32,23 @@ body {
 
 /* ── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar       { width: 5px; }
-::-webkit-scrollbar-track { background: #1A002E; }
-::-webkit-scrollbar-thumb { background: #35285A; border-radius: 3px; }
+::-webkit-scrollbar-track { background: #F5F3EC; }
+::-webkit-scrollbar-thumb { background: rgba(119,103,164,0.45); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #7767A4; }
 
 /* ── Reusable utility classes ───────────────────────────────────────────── */
-.font-display { font-family: "Catchye", "Cormorant Garamond", Georgia, serif; }
+.font-display { font-family: "Cormorant Garamond", Georgia, serif; }
 .font-body    { font-family: "Epilogue", system-ui, sans-serif; }
 
-.glow-text  { text-shadow: 0 0 24px rgba(119,103,164,0.9), 0 0 48px rgba(119,103,164,0.4); }
-.glow-cream { text-shadow: 0 0 18px rgba(221,216,196,0.55); }
+.glow-text  { text-shadow: 0 2px 24px rgba(119,103,164,0.25); }
+.glow-cream { text-shadow: 0 2px 12px rgba(26,0,46,0.12); }
 
 .card {
-  background: rgba(53,40,90,0.5);
-  border: 1px solid rgba(119,103,164,0.25);
+  background: rgba(255,255,255,0.88);
+  border: 1px solid rgba(53,40,90,0.1);
   border-radius: 16px;
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 20px rgba(26,0,46,0.06);
 }
 
 .btn-primary {
@@ -67,20 +57,20 @@ body {
   justify-content: center;
   gap: 0.5rem;
   background: #7767A4;
-  color: #DDD8C4;
+  color: #F5F3EC;
   padding: 0.75rem 2rem;
   border-radius: 9999px;
   font-family: "Epilogue", system-ui, sans-serif;
   font-weight: 600;
   letter-spacing: 0.04em;
   transition: all 0.25s ease;
-  border: 1px solid rgba(221,216,196,0.15);
+  border: 1px solid rgba(119,103,164,0.3);
   text-decoration: none;
   cursor: pointer;
 }
 .btn-primary:hover {
-  background: #9B8BC4;
-  box-shadow: 0 0 24px rgba(119,103,164,0.5);
+  background: #35285A;
+  box-shadow: 0 4px 20px rgba(53,40,90,0.3);
   transform: translateY(-1px);
 }
 
@@ -88,7 +78,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: rgba(221,216,196,0.75);
+  color: rgba(26,0,46,0.65);
   padding: 0.5rem 1.25rem;
   border-radius: 9999px;
   font-family: "Epilogue", system-ui, sans-serif;
@@ -100,16 +90,16 @@ body {
   border: none;
 }
 .btn-ghost:hover {
-  color: #DDD8C4;
-  background: rgba(119,103,164,0.15);
+  color: #1A002E;
+  background: rgba(119,103,164,0.1);
 }
 
 .input-field {
-  background: rgba(53,40,90,0.6);
-  border: 1px solid rgba(119,103,164,0.3);
+  background: #ffffff;
+  border: 1px solid rgba(53,40,90,0.2);
   border-radius: 10px;
   padding: 0.6rem 0.9rem;
-  color: #DDD8C4;
+  color: #1A002E;
   font-family: "Epilogue", system-ui, sans-serif;
   font-size: 0.9rem;
   width: 100%;
@@ -119,7 +109,7 @@ body {
 .input-field:focus {
   outline: none;
   border-color: #7767A4;
-  box-shadow: 0 0 0 2px rgba(119,103,164,0.25);
+  box-shadow: 0 0 0 3px rgba(119,103,164,0.12);
 }
 .input-field::-webkit-outer-spin-button,
 .input-field::-webkit-inner-spin-button { appearance: none; }
@@ -133,11 +123,11 @@ body {
   color: #7767A4;
 }
 
-/* ── Recharts dark theme ─────────────────────────────────────────────────── */
+/* ── Recharts light theme ────────────────────────────────────────────────── */
 .recharts-cartesian-grid-horizontal line,
-.recharts-cartesian-grid-vertical   line { stroke: rgba(53,40,90,0.8); }
+.recharts-cartesian-grid-vertical   line { stroke: rgba(53,40,90,0.1); }
 .recharts-text {
-  fill: rgba(221,216,196,0.6);
+  fill: rgba(26,0,46,0.5);
   font-family: "Epilogue", sans-serif;
   font-size: 11px;
 }
