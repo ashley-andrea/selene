@@ -45,8 +45,8 @@ export default function SafetyGate({ patient, response }: Props) {
       <div
         className="flex flex-wrap items-center gap-3 rounded-2xl px-6 py-5"
         style={{
-          background: "rgba(53,40,90,0.45)",
-          border: "1px solid rgba(119,103,164,0.22)",
+          background: "rgba(255,255,255,0.85)",
+          border: "1px solid rgba(53,40,90,0.1)",
         }}
       >
         {/* Check */}
@@ -65,10 +65,10 @@ export default function SafetyGate({ patient, response }: Props) {
           </svg>
         </div>
         <div className="flex-1 min-w-0">
-          <p className="font-body font-semibold text-sm" style={{ color: "#DDD8C4" }}>
+          <p className="font-body font-semibold text-sm" style={{ color: "#1A002E" }}>
             Safety screening complete
           </p>
-          <p className="font-body text-xs" style={{ color: "rgba(221,216,196,0.5)" }}>
+          <p className="font-body text-xs" style={{ color: "rgba(26,0,46,0.55)" }}>
             {response.total_candidates_evaluated} candidates evaluated ·{" "}
             <span style={{ color: "#6EE7B7" }}>
               {response.recommendations.length} passed
@@ -83,9 +83,9 @@ export default function SafetyGate({ patient, response }: Props) {
         <div
           className="text-xs font-body px-3 py-1 rounded-full"
           style={{
-            background: "rgba(119,103,164,0.2)",
-            color: "#DDD8C4",
-            border: "1px solid rgba(119,103,164,0.3)",
+            background: "rgba(119,103,164,0.1)",
+            color: "#1A002E",
+            border: "1px solid rgba(119,103,164,0.25)",
           }}
         >
           {response.cluster_profile} ·{" "}
@@ -120,7 +120,7 @@ export default function SafetyGate({ patient, response }: Props) {
               </span>
             ))}
           </div>
-          <p className="font-body text-xs mt-3" style={{ color: "rgba(221,216,196,0.45)" }}>
+          <p className="font-body text-xs mt-3" style={{ color: "rgba(26,0,46,0.55)" }}>
             All combined estrogen–progestin pills are contraindicated for these
             conditions. Progestin-only options remain available.
           </p>
@@ -146,8 +146,8 @@ export default function SafetyGate({ patient, response }: Props) {
                 className="text-xs font-body px-2.5 py-1 rounded-full"
                 style={{
                   background: "rgba(252,211,77,0.1)",
-                  color: "#FDE68A",
-                  border: "1px solid rgba(252,211,77,0.18)",
+                  color: "#78350F",
+                  border: "1px solid rgba(252,211,77,0.3)",
                 }}
               >
                 {c.label}

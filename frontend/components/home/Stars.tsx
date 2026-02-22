@@ -35,7 +35,7 @@ export default function Stars() {
         const opacity = 0.25 + 0.65 * (0.5 + 0.5 * Math.sin(s.phase + t * s.speed));
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(221, 216, 196, ${opacity})`;
+        ctx.fillStyle = `rgba(53, 40, 90, ${opacity * 0.45})`;
         ctx.fill();
       }
       raf = requestAnimationFrame(draw);

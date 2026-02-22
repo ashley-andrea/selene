@@ -98,10 +98,10 @@ export default function IntakePage() {
           >
             <span style={{ fontSize: "1.2rem" }}>✓</span>
             <div>
-              <p className="font-body text-sm font-semibold" style={{ color: "#DDD8C4" }}>
+              <p className="font-body text-sm font-semibold" style={{ color: "#1A002E" }}>
                 PDF extracted — {pdfMeta.pages} pages parsed
               </p>
-              <p className="font-body text-xs" style={{ color: "rgba(221,216,196,0.5)" }}>
+              <p className="font-body text-xs" style={{ color: "rgba(26,0,46,0.5)" }}>
                 Fields below are pre-filled from your document. Review and
                 correct anything before submitting.
               </p>

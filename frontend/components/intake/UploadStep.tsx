@@ -45,7 +45,7 @@ export default function UploadStep({ onExtracted }: Props) {
           border: `2px dashed ${isDragActive ? "#7767A4" : "rgba(119,103,164,0.35)"}`,
           background: isDragActive
             ? "rgba(119,103,164,0.08)"
-            : "rgba(53,40,90,0.25)",
+            : "rgba(119,103,164,0.05)",
         }}
       >
         <input {...getInputProps()} />
@@ -61,7 +61,7 @@ export default function UploadStep({ onExtracted }: Props) {
                 animation: "spin 0.8s linear infinite",
               }}
             />
-            <p className="font-body text-sm" style={{ color: "rgba(221,216,196,0.6)" }}>
+            <p className="font-body text-sm" style={{ color: "rgba(26,0,46,0.6)" }}>
               Parsing your document…
             </p>
           </div>
@@ -91,10 +91,10 @@ export default function UploadStep({ onExtracted }: Props) {
               />
             </svg>
 
-            <p className="font-body font-semibold mb-1" style={{ color: "#DDD8C4" }}>
+            <p className="font-body font-semibold mb-1" style={{ color: "#1A002E" }}>
               {isDragActive ? "Drop your PDF here" : "Drag & drop your medical record"}
             </p>
-            <p className="font-body text-sm" style={{ color: "rgba(221,216,196,0.45)" }}>
+            <p className="font-body text-sm" style={{ color: "rgba(26,0,46,0.5)" }}>
               or click to browse · PDF only
             </p>
           </>
@@ -112,7 +112,7 @@ export default function UploadStep({ onExtracted }: Props) {
 
       <p
         className="text-xs text-center font-body"
-        style={{ color: "rgba(221,216,196,0.35)" }}
+        style={{ color: "rgba(26,0,46,0.4)" }}
       >
         Your document is processed server-side, never stored. Selene extracts
         clinical data only.

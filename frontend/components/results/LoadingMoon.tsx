@@ -80,8 +80,8 @@ export default function LoadingMoon() {
           <svg viewBox="0 0 20 20" fill="none" width={20} height={20}>
             <path
               d="M16 10.5A6 6 0 1 1 9.5 4 4.5 4.5 0 0 0 16 10.5z"
-              fill="#DDD8C4"
-              opacity="0.9"
+              fill="#7767A4"
+              opacity="0.85"
             />
           </svg>
         </div>
@@ -104,8 +104,8 @@ export default function LoadingMoon() {
               width: 8,
               height: 8,
               borderRadius: "50%",
-              background: "#DDD8C4",
-              boxShadow: "0 0 6px #DDD8C4, 0 0 14px rgba(221,216,196,0.4)",
+              background: "#7767A4",
+              boxShadow: "0 0 6px #7767A4, 0 0 14px rgba(119,103,164,0.4)",
             }}
           />
         </div>
@@ -139,9 +139,9 @@ export default function LoadingMoon() {
       <h2
         className="font-display mb-1 glow-text"
         style={{
-          fontFamily: "Catchye, 'Cormorant Garamond', Georgia, serif",
+          fontFamily: "'Cormorant Garamond', Georgia, serif",
           fontSize: "1.8rem",
-          color: "#DDD8C4",
+          color: "#1A002E",
           textAlign: "center",
         }}
       >
@@ -149,7 +149,7 @@ export default function LoadingMoon() {
       </h2>
       <p
         className="font-body text-sm mb-10"
-        style={{ color: "rgba(221,216,196,0.4)", textAlign: "center" }}
+        style={{ color: "rgba(26,0,46,0.5)", textAlign: "center" }}
       >
         This usually takes 10–30 seconds
       </p>
@@ -188,7 +188,7 @@ export default function LoadingMoon() {
                   <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                     <path
                       d="M2 6l3 3 5-5"
-                      stroke="#DDD8C4"
+                      stroke="white"
                       strokeWidth="1.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -200,7 +200,7 @@ export default function LoadingMoon() {
                       width: 6,
                       height: 6,
                       borderRadius: "50%",
-                      background: "#DDD8C4",
+                    background: "white",
                       animation: "step-pulse 1.2s ease-in-out infinite",
                     }}
                   />
@@ -210,7 +210,7 @@ export default function LoadingMoon() {
                       width: 5,
                       height: 5,
                       borderRadius: "50%",
-                      background: "rgba(221,216,196,0.25)",
+                      background: "rgba(26,0,46,0.15)",
                     }}
                   />
                 )}
@@ -218,7 +218,7 @@ export default function LoadingMoon() {
 
               <span
                 className="font-body text-sm"
-                style={{ color: "#DDD8C4" }}
+                style={{ color: "#1A002E" }}
               >
                 {s}
               </span>

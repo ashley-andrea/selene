@@ -19,12 +19,12 @@ function Toggle({
       aria-checked={value}
       onClick={() => onChange(!value)}
       className="relative inline-flex h-5 w-9 flex-shrink-0 items-center rounded-full transition-colors focus:outline-none"
-      style={{ background: value ? "#7767A4" : "rgba(53,40,90,0.8)" }}
+      style={{ background: value ? "#7767A4" : "rgba(119,103,164,0.15)" }}
     >
       <span
         className="inline-block h-3.5 w-3.5 transform rounded-full transition-transform"
         style={{
-          background: "#DDD8C4",
+          background: "white",
           transform: value ? "translateX(19px)" : "translateX(3px)",
         }}
       />
@@ -55,11 +55,11 @@ function NumberInput({
     <div>
       <label
         className="block font-body text-xs font-medium mb-1"
-        style={{ color: "rgba(221,216,196,0.6)" }}
+        style={{ color: "rgba(26,0,46,0.65)" }}
       >
         {label}
         {unit && (
-          <span style={{ color: "rgba(221,216,196,0.35)" }}> ({unit})</span>
+          <span style={{ color: "rgba(26,0,46,0.4)" }}> ({unit})</span>
         )}
       </label>
       <input
@@ -103,7 +103,7 @@ function Section({
         onClick={() => setOpen((o) => !o)}
       >
         <div className="flex items-center gap-3">
-          <span className="font-body font-semibold text-sm" style={{ color: "#DDD8C4" }}>
+          <span className="font-body font-semibold text-sm" style={{ color: "#1A002E" }}>
             {title}
           </span>
           {badge && (
@@ -135,7 +135,7 @@ function Section({
       {open && (
         <div
           className="px-6 pb-6 pt-2 space-y-4"
-          style={{ background: "rgba(26,0,46,0.4)" }}
+          style={{ background: "rgba(255,255,255,0.6)" }}
         >
           {children}
         </div>
@@ -158,11 +158,11 @@ function ConditionRow({
   return (
     <div className="flex items-center justify-between gap-4 py-1.5">
       <div>
-        <span className="font-body text-sm" style={{ color: "#DDD8C4" }}>
+        <span className="font-body text-sm" style={{ color: "#1A002E" }}>
           {label}
         </span>
         {sublabel && (
-          <p className="font-body text-xs" style={{ color: "rgba(221,216,196,0.45)" }}>
+          <p className="font-body text-xs" style={{ color: "rgba(26,0,46,0.5)" }}>
             {sublabel}
           </p>
         )}
@@ -252,7 +252,7 @@ export default function ManualForm({ initial, onSubmit }: Props) {
           <div className="col-span-2 sm:col-span-1">
             <label
               className="block font-body text-xs font-medium mb-1"
-              style={{ color: "rgba(221,216,196,0.6)" }}
+              style={{ color: "rgba(26,0,46,0.65)" }}
             >
               Age <span style={{ color: "#F87171" }}>*</span>
             </label>
@@ -340,7 +340,7 @@ export default function ManualForm({ initial, onSubmit }: Props) {
         badge="WHO MEC Category 4"
         badgeColor="#F87171"
       >
-        <p className="font-body text-xs mb-3" style={{ color: "rgba(221,216,196,0.45)" }}>
+        <p className="font-body text-xs mb-3" style={{ color: "rgba(26,0,46,0.55)" }}>
           Category 4 = absolute contraindication for combined oral contraceptives.
         </p>
         {[
@@ -364,7 +364,7 @@ export default function ManualForm({ initial, onSubmit }: Props) {
         badge="WHO MEC Category 3"
         badgeColor="#FCD34D"
       >
-        <p className="font-body text-xs mb-3" style={{ color: "rgba(221,216,196,0.45)" }}>
+        <p className="font-body text-xs mb-3" style={{ color: "rgba(26,0,46,0.55)" }}>
           Category 3 = use with caution; some combined pill options remain.
         </p>
         {[

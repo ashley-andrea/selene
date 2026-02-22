@@ -49,7 +49,7 @@ function MoonIcon({ size = 56 }: { size?: number }) {
       />
       <path
         d="M42 29.12A16 16 0 1 1 26.88 14 12 12 0 0 0 42 29.12z"
-        stroke="#DDD8C4"
+        stroke="#35285A"
         strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -100,7 +100,7 @@ export default function HomePage() {
           >
             <div
               className="w-2.5 h-2.5 rounded-full"
-              style={{ background: "#DDD8C4", boxShadow: "0 0 8px #DDD8C4" }}
+              style={{ background: "#7767A4", boxShadow: "0 0 8px rgba(119,103,164,0.7)" }}
             />
           </div>
 
