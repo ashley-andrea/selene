@@ -91,7 +91,7 @@ export default function RiskCards({ recommendations }: Props) {
               </div>
               {isTop && (
                 <span
-                  className="text-xs font-body px-2 py-0.5 rounded-full"
+                  className="text-xs font-body px-2 py-0.5 rounded-full inline-flex items-center justify-center"
                   style={{
                     background: "rgba(119,103,164,0.1)",
                     color: "#7767A4",

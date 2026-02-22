@@ -151,6 +151,20 @@ export default function TrajectoryChart({ recommendations }: Props) {
 
   const displayMonth = Math.round(revealPct * 12);
 
+  /* Dynamic Y-axis: clamp to relevant data range + 15% padding */
+  const yDomain = useMemo(() => {
+    const allVals = chartData.flatMap((row) =>
+      Object.entries(row)
+        .filter(([k]) => k !== "month")
+        .map(([, v]) => v as number)
+    );
+    if (!allVals.length) return [0, 1] as [number, number];
+    const lo = Math.min(...allVals);
+    const hi = Math.max(...allVals);
+    const pad = Math.max((hi - lo) * 0.15, 0.005);
+    return [Math.max(0, lo - pad), Math.min(1, hi + pad)] as [number, number];
+  }, [chartData]);
+
   return (
     <div className="space-y-6">
       {/* ── Feature group selector ──────────────────────────────────────── */}
@@ -234,9 +248,14 @@ export default function TrajectoryChart({ recommendations }: Props) {
               }}
             />
             <YAxis
-              domain={[0, 1]}
-              ticks={[0, 0.25, 0.5, 0.75, 1]}
-              tickFormatter={(v: number) => `${(v * 100).toFixed(0)}%`}
+              domain={yDomain}
+              tickFormatter={(v: number) =>
+                v < 0.001
+                  ? `${(v * 100).toFixed(2)}%`
+                  : v < 0.1
+                  ? `${(v * 100).toFixed(1)}%`
+                  : `${(v * 100).toFixed(0)}%`
+              }
               tick={{ fill: "rgba(26,0,46,0.4)", fontSize: 10 }}
               tickLine={false}
               axisLine={false}
