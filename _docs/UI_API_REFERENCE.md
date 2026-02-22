@@ -3,9 +3,9 @@
 All endpoints are served by the **FastAPI backend** (`main.py`).
 
 **Base URL (local dev):** `http://localhost:8000`  
-**Base URL (production):** TBD — set by deployment environment.
+**Base URL (production):** `https://bc-recommendation-agent.onrender.com`
 
-CORS is fully open in local dev (`*`). In production the backend reads `ALLOWED_ORIGINS` from its environment and restricts to those origins (e.g. your Vercel URL).
+CORS is fully open in local dev (`*`). In production the backend reads `ALLOWED_ORIGINS` from its environment and restricts to those origins (set to your Vercel URL in the Render dashboard env vars).
 
 ---
 
@@ -342,7 +342,12 @@ Array of pill objects from `data/pill_reference_db.csv`. Each object contains fi
 
 The FastAPI backend auto-generates full interactive docs at:
 
+**Local dev:**
 - **Swagger UI:** `http://localhost:8000/docs`
 - **ReDoc:** `http://localhost:8000/redoc`
+
+**Production (live):**
+- **Swagger UI:** `https://bc-recommendation-agent.onrender.com/docs`
+- **ReDoc:** `https://bc-recommendation-agent.onrender.com/redoc`
 
 These are the fastest way to explore request/response shapes and run test calls during development.
