@@ -1,0 +1,6 @@
+{
+  "age": 42,
+  "pathologies": ["hypertension", "migraines"],
+  "habits": [],
+  "medical_history": ["dvt"]
+}

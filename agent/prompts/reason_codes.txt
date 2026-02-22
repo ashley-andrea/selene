@@ -1,0 +1,12 @@
+You are generating reason codes for a contraceptive recommendation.
+
+Selected pill: {best_candidate}
+Cluster profile: {cluster_profile}
+Simulation results: {simulation_results}
+Utility score: {utility_score}
+
+Return a JSON array of 2-4 short reason strings explaining why this pill was selected for this patient. Each reason should be medically relevant, concise, and grounded in the simulation data.
+
+Example: ["lowest thrombotic risk in cluster", "high predicted adherence", "matches patient age profile"]
+
+Return ONLY the JSON array, no other text.

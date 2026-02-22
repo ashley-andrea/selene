@@ -1,0 +1,85 @@
+{
+  "_comment": "Patient test fixtures. The agent internally uses simplified format (pathologies/habits/medical_history arrays), which is automatically transformed to the ML model format (cond_*/obs_*/med_* fields) by the API client layer. You can also provide the new format fields directly and they will be used as-is.",
+  "standard": {
+    "description": "Healthy young adult — high-confidence cluster, clean recommendation",
+    "age": 28,
+    "pathologies": [],
+    "habits": ["smoking"],
+    "medical_history": []
+  },
+  "high_risk": {
+    "description": "Multiple pathologies — aggressive relative risk rules, many pills excluded",
+    "age": 42,
+    "pathologies": ["hypertension", "migraines"],
+    "habits": [],
+    "medical_history": ["dvt"]
+  },
+  "low_confidence_cluster": {
+    "description": "Edge-case age profile — confidence below 0.70, tests LLM weight adjustment",
+    "age": 48,
+    "pathologies": ["diabetes", "hypertension", "obesity"],
+    "habits": ["smoking"],
+    "medical_history": []
+  },
+  "minimal_candidates": {
+    "description": "Many contraindications — tests behavior when Safe Gate leaves very few candidates",
+    "age": 38,
+    "pathologies": ["lupus", "hypertension", "migraines"],
+    "habits": ["smoking"],
+    "medical_history": ["stroke", "dvt"]
+  },
+  "young_healthy": {
+    "description": "Young patient with no conditions — all pills should be available",
+    "age": 22,
+    "pathologies": [],
+    "habits": [],
+    "medical_history": []
+  },
+  "pcos_patient": {
+    "description": "PCOS patient — common use case for oral contraceptives",
+    "age": 30,
+    "pathologies": ["pcos"],
+    "habits": [],
+    "medical_history": []
+  },
+  "full_format_example": {
+    "description": "Example using the full ML model format with all cond_/obs_/med_ fields",
+    "age": 35,
+    "cond_migraine_with_aura": 0,
+    "cond_stroke": 0,
+    "cond_mi": 0,
+    "cond_dvt": 0,
+    "cond_breast_cancer": 0,
+    "cond_lupus": 0,
+    "cond_thrombophilia": 0,
+    "cond_atrial_fibrillation": 0,
+    "cond_liver_disease": 0,
+    "cond_hypertension": 1,
+    "cond_migraine": 0,
+    "cond_gallstones": 0,
+    "cond_diabetes": 0,
+    "cond_prediabetes": 0,
+    "cond_epilepsy": 0,
+    "cond_chronic_kidney_disease": 0,
+    "cond_sleep_apnea": 0,
+    "cond_pcos": 1,
+    "cond_endometriosis": 0,
+    "cond_depression": 0,
+    "cond_hypothyroidism": 0,
+    "cond_rheumatoid_arthritis": 0,
+    "cond_fibromyalgia": 0,
+    "cond_osteoporosis": 0,
+    "cond_asthma": 0,
+    "obs_bmi": 26.5,
+    "obs_systolic_bp": 128,
+    "obs_diastolic_bp": 82,
+    "obs_phq9_score": 2,
+    "obs_pain_score": 1,
+    "obs_testosterone": 48.0 ,
+    "obs_smoker": 0,
+    "med_ever_ocp": 1,
+    "med_current_combined_ocp": 0,
+    "med_current_minipill": 0,
+    "has_absolute_contraindication_combined_oc": 0
+  }
+}

@@ -1,0 +1,14 @@
+You are evaluating the confidence of a patient cluster assignment for a contraceptive recommendation system.
+
+Patient cluster assignment: {cluster_profile}
+Confidence score: {cluster_confidence}
+Patient age: {patient_age}
+Patient pathologies: {patient_pathologies}
+
+The confidence score is below the acceptable threshold (0.70). This means the clustering model is uncertain about where this patient belongs, which affects how aggressively relative risk rules should be applied.
+
+Return a JSON object with:
+- weight_adjustment: float (multiplier to apply to relative risk rules, range 0.5-1.5, where 1.0 = no change, >1.0 = more conservative, <1.0 = less aggressive)
+- rationale: string (one sentence explanation of why this adjustment is appropriate)
+
+Return ONLY the JSON object, no other text.

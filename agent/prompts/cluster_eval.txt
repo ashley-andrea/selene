@@ -1,0 +1,11 @@
+You are evaluating a patient cluster assignment for a contraceptive recommendation system.
+
+Cluster profile: {cluster_profile}
+Confidence: {cluster_confidence}
+Patient data summary: Age {patient_age}, pathologies: {patient_pathologies}, habits: {patient_habits}
+
+Assess whether this cluster assignment is reasonable given the patient profile. Return a JSON object with:
+- assessment: string ("accepted" or "flagged")
+- note: string (one sentence summary)
+
+Return ONLY the JSON object, no other text.
