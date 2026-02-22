@@ -67,8 +67,8 @@ async def call_simulator(pill_record: dict, patient_data: dict) -> dict:
     # Clean pill record (replace NaN with None for JSON serialization)
     cleaned_pill = _clean_pill_record(pill_record)
     
-    # Extract pill_id for logging
-    pill_id = cleaned_pill.get("pill_id") or cleaned_pill.get("set_id", "unknown")
+    # Extract pill_id for logging (uses combo_id from pill_reference_db.csv)
+    pill_id = cleaned_pill.get("combo_id") or cleaned_pill.get("set_id", "unknown")
     
     payload = {
         "candidate_pill": cleaned_pill,

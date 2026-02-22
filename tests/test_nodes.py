@@ -143,9 +143,10 @@ class TestCandidateGen:
     def test_generates_candidates_for_healthy_patient(self):
         from agent.nodes import candidate_gen
 
+        # cluster_5 = Baseline / Low-Risk: no cluster exclusions
         state = make_state(
             patient_data={"age": 25, "pathologies": [], "habits": [], "medical_history": []},
-            cluster_profile="cluster_0",
+            cluster_profile="cluster_5",
         )
         result = candidate_gen.run(state)
         assert len(result["candidate_pool"]) > 0
@@ -155,6 +156,8 @@ class TestCandidateGen:
         from agent.nodes import candidate_gen
         from agent.pill_database import get_pill_by_id
 
+        # cluster_5 = Baseline / Low-Risk: no cluster exclusions
+        # DVT hard constraint then removes combined pills → only minipill survives
         state = make_state(
             patient_data={
                 "age": 35,
@@ -162,13 +165,13 @@ class TestCandidateGen:
                 "habits": [],
                 "medical_history": ["dvt"],
             },
-            cluster_profile="cluster_2",
+            cluster_profile="cluster_5",
         )
         result = candidate_gen.run(state)
-        # All remaining pills should be progestin-only (no ethinyl estradiol)
+        # All remaining pills must be progestin-only (pill_type does NOT start with "combined")
         for pill_id in result["candidate_pool"]:
             pill = get_pill_by_id(pill_id)
-            assert "ETHINYL ESTRADIOL" not in pill.get("substance_name", "").upper(), (
+            assert not str(pill.get("pill_type", "")).startswith("combined"), (
                 f"{pill_id} should have been excluded (combined + VTE history)"
             )
 
@@ -176,6 +179,7 @@ class TestCandidateGen:
         from agent.nodes import candidate_gen
         from agent.pill_database import get_pill_by_id
 
+        # cluster_5 = no cluster exclusions; smoker-over-35 hard constraint removes combined pills
         state = make_state(
             patient_data={
                 "age": 40,
@@ -183,12 +187,13 @@ class TestCandidateGen:
                 "habits": ["smoking"],
                 "medical_history": [],
             },
-            cluster_profile="cluster_3",
+            cluster_profile="cluster_5",
         )
         result = candidate_gen.run(state)
+        # All remaining pills must be progestin-only
         for pill_id in result["candidate_pool"]:
             pill = get_pill_by_id(pill_id)
-            assert "ETHINYL ESTRADIOL" not in pill.get("substance_name", "").upper(), (
+            assert not str(pill.get("pill_type", "")).startswith("combined"), (
                 f"{pill_id} should have been excluded (smoker over 35)"
             )
 
@@ -313,12 +318,13 @@ class TestSafeGate:
     def test_healthy_patient_gets_all_pills(self):
         from agent.safe_gate import apply_safe_gate
 
+        # cluster_5 = Baseline / Low-Risk: no cluster exclusions
+        # Healthy patient with no hard contraindications → all 9 pills available
         result = apply_safe_gate(
             {"age": 25, "pathologies": [], "habits": [], "medical_history": []},
-            "cluster_0",
+            "cluster_5",
         )
-        # All 296 pills should be available for healthy patient
-        assert len(result["candidate_pool"]) == 296
+        assert len(result["candidate_pool"]) == 9
 
     def test_breast_cancer_excludes_all(self):
         from agent.safe_gate import apply_safe_gate
@@ -334,11 +340,12 @@ class TestSafeGate:
         from agent import pill_database
         from agent.safe_gate import apply_safe_gate
 
+        # cluster_5 = no cluster exclusions; DVT hard constraint removes combined OCPs
         result = apply_safe_gate(
             {"age": 30, "pathologies": [], "habits": [], "medical_history": ["dvt"]},
-            "cluster_2",
+            "cluster_5",
         )
-        # Only progestin-only pills should remain (no ethinyl estradiol)
+        # Only progestin-only pill (NET_PO_350) should remain
         for pill_id in result["candidate_pool"]:
             pill = pill_database.get_pill_by_id(pill_id)
-            assert "ETHINYL ESTRADIOL" not in pill.get("substance_name", "").upper()
+            assert not str(pill.get("pill_type", "")).startswith("combined")

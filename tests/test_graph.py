@@ -168,8 +168,8 @@ class TestGraphIntegration:
 
         assert final_state["converged"] is True
         assert final_state["best_candidate"] is not None
-        # High-risk patient with DVT history should have fewer pills than total (combined pills excluded)
-        assert len(final_state["candidate_pool"]) < 296
+        # High-risk patient with DVT history should have fewer pills than all 9 available (combined pills excluded)
+        assert len(final_state["candidate_pool"]) < 9
 
     def test_recommendation_converges_within_max_iterations(self, mock_server):
         from agent.nodes.convergence import MAX_ITERATIONS

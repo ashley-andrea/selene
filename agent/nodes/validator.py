@@ -12,9 +12,9 @@ from agent.state import SystemState
 
 logger = logging.getLogger(__name__)
 
-REQUIRED_FIELDS = ["age", "medical_history", "habits", "pathologies"]
+REQUIRED_FIELDS = ["age"]
 AGE_MIN = 15
-AGE_MAX = 55
+AGE_MAX = 60  # GMM training data covers up to ~60; raised from 55
 
 
 def run(state: SystemState) -> dict:
@@ -23,10 +23,17 @@ def run(state: SystemState) -> dict:
     if not patient or not isinstance(patient, dict):
         raise ValueError("patient_data is required and must be a dict")
 
-    # Check required fields
+    # Check required fields (age is the only mandatory one now;
+    # pathologies/habits/medical_history default to [] if absent since
+    # the new cond_*/obs_* format is now the primary input)
     for field in REQUIRED_FIELDS:
         if field not in patient:
             raise ValueError(f"Missing required patient field: {field}")
+
+    # Ensure list fields exist (default to []) for backwards compat
+    patient.setdefault("pathologies", [])
+    patient.setdefault("habits", [])
+    patient.setdefault("medical_history", [])
 
     # Normalize and validate age
     try:
