@@ -104,6 +104,18 @@ def run(state: SystemState) -> dict:
 
 # ── LLM invocation ─────────────────────────────────────────────────────────
 
+def _strip_markdown_json(text: str) -> str:
+    """Remove markdown code fences that some LLMs wrap around JSON responses."""
+    text = text.strip()
+    if text.startswith("```"):
+        # Drop the opening fence line (```json or just ```)
+        text = text.split("\n", 1)[1] if "\n" in text else text[3:]
+        # Drop the closing fence
+        if text.endswith("```"):
+            text = text[:-3]
+    return text.strip()
+
+
 def _ask_llm(
     iteration: int,
     best_candidate: str,
@@ -159,7 +171,7 @@ def _ask_llm(
         )
 
         response = llm.invoke([HumanMessage(content=prompt)])
-        decision = json.loads(response.content)
+        decision = json.loads(_strip_markdown_json(response.content))
 
         logger.info(
             "✓ LLM convergence: converged=%s confidence=%.2f",

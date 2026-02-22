@@ -1,0 +1,53 @@
+services:
+  - type: web
+    name: bc-recommendation-agent
+    runtime: python
+    region: frankfurt          # closest to EU users — change to: oregon, ohio, singapore
+    plan: starter              # free tier; upgrade to "standard" for no cold starts
+
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT --workers 1
+
+    healthCheckPath: /health
+
+    envVars:
+      # ── LLM ───────────────────────────────────────────────────────────────
+      - key: LLM_PROVIDER
+        value: groq            # or "claude" — change freely
+
+      - key: GROQ_API_KEY
+        sync: false            # set this in the Render dashboard (not committed)
+
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+
+      # Keep Claude keys available as fallback (set in dashboard)
+      - key: ANTHROPIC_API_KEY
+        sync: false
+
+      - key: CLAUDE_MODEL
+        value: claude-sonnet-4-6
+
+      # ── ML Model APIs (Red Hat OpenShift) ─────────────────────────────────
+      - key: CLUSTER_API_URL
+        value: https://cluster-model-api-pietrosaveri-dev.apps.rm2.thpm.p1.openshiftapps.com/api/v1/cluster/predict
+
+      - key: SIMULATOR_API_URL
+        value: https://simulator-model-api-pietrosaveri-dev.apps.rm2.thpm.p1.openshiftapps.com/api/v1/simulator/simulate
+
+      # ── CORS ──────────────────────────────────────────────────────────────
+      # Set to your Vercel frontend URL once deployed (no trailing slash)
+      # e.g. https://your-app.vercel.app
+      # Leave as "*" during testing, update before going public
+      - key: ALLOWED_ORIGINS
+        value: "*"
+
+      # ── LangSmith (optional — remove if not needed) ───────────────────────
+      - key: LANGCHAIN_TRACING_V2
+        value: "true"
+
+      - key: LANGCHAIN_API_KEY
+        sync: false
+
+      - key: LANGCHAIN_PROJECT
+        value: HackEurope_project

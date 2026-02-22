@@ -53,11 +53,16 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-# CORS — permissive for development, tighten for production
+# CORS — allow_origins from env var for production (Vercel URL), wildcard for local dev.
+# allow_credentials must be False when allow_origins=["*"] — browsers reject the combo.
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "*")
+_allow_origins: list[str] | str = (
+    [o.strip() for o in _raw_origins.split(",")] if _raw_origins != "*" else ["*"]
+)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_allow_origins,
+    allow_credentials=_raw_origins != "*",  # True only when specific origins are set
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -235,7 +240,7 @@ class RecommendationOutput(BaseModel):
 
 
 # ── Endpoints ───────────────────────────────────────────────────────────────
-@app.post("/recommend", response_model=RecommendationOutput)
+@app.post("/api/v1/recommend", response_model=RecommendationOutput)
 async def recommend(patient: PatientInput):
     """
     Run the full agent loop for a patient and return a recommendation.
