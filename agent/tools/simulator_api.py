@@ -2,10 +2,42 @@
 HTTP client for the Simulator Model API on Red Hat OpenShift.
 
 This is one of exactly two files that touch the ML model boundary.
-If the ML team changes the request/response schema, update ONLY this file
-and the mock server. Nothing else in the agent needs to change.
+If the ML team changes the request/response schema, update ONLY this file.
+Nothing else in the agent needs to change.
 
-SCHEMA SOURCE OF TRUTH: ML_models_API.md
+SCHEMA SOURCE OF TRUTH: models/simulation/SIMULATION_MODEL.md  and  _docs/ML_models_API.md
+
+Real model endpoint (models/simulation/serve.py):
+    POST /api/v1/simulator/simulate
+
+Request payload:
+    {
+        "candidate_pill": { "combo_id": "EE30_DRSP3", ...pill record fields... },
+        "patient":        { "age": 28, "cond_*": 0/1, "obs_*": float|null, ... },
+        "n_months":       12   (optional, default 12)
+    }
+
+Response (full trajectory + backward-compatible summary):
+    {
+        "combo_id":     "EE30_DRSP3",
+        "n_months":     12,
+        "months":       [1, 2, ..., 12],
+        "symptom_probs": {
+            "sym_nausea": [0.02, ...],
+            "still_taking": [0.91, ...],
+            "evt_dvt": [0.0, ...],
+            ...  (18 binary targets total)
+        },
+        "satisfaction": [6.1, 6.3, ...],
+        // Derived summary metrics — consumed by the agent utility node:
+        "discontinuation_probability": 0.09,
+        "severe_event_probability":    0.0002,
+        "mild_side_effect_score":      0.18,
+        "contraceptive_effectiveness": 0.63
+    }
+
+Set SIMULATOR_API_URL to the real OpenShift route, e.g.:
+    SIMULATOR_API_URL=https://simulator-model.apps.<cluster>/api/v1/simulator/simulate
 """
 
 import logging
@@ -36,19 +68,29 @@ def _clean_pill_record(pill_record: dict) -> dict:
     return cleaned
 
 
-async def call_simulator(pill_record: dict, patient_data: dict) -> dict:
+async def call_simulator(pill_record: dict, patient_data: dict, n_months: int = 12) -> dict:
     """
-    Async call to the Simulator Model API.
+    Async call to the real Simulator Model API (models/simulation/serve.py).
 
     Request:
         POST {SIMULATOR_API_URL}
-        {"candidate_pill": {...pill fields...}, "patient": {age, cond_*, obs_*, med_*, ...}}
-
-    Response:
         {
+            "candidate_pill": {...pill record from pill_reference_db.csv...},
+            "patient":        {age, cond_*, obs_*, med_*, ...},
+            "n_months":       12
+        }
+
+    Response (full trajectory + summary):
+        {
+            "combo_id":     str,
+            "n_months":     int,
+            "months":       [1..N],
+            "symptom_probs": {"sym_nausea": [...], "still_taking": [...], ...},
+            "satisfaction": [...],
+            // Summary metrics (consumed by utility node):
             "discontinuation_probability": float,
-            "severe_event_probability": float,
-            "mild_side_effect_score": float,
+            "severe_event_probability":    float,
+            "mild_side_effect_score":      float,
             "contraceptive_effectiveness": float
         }
 
@@ -73,6 +115,7 @@ async def call_simulator(pill_record: dict, patient_data: dict) -> dict:
     payload = {
         "candidate_pill": cleaned_pill,
         "patient": transformed_patient,
+        "n_months": n_months,
     }
 
     async with httpx.AsyncClient(timeout=TIMEOUT_SECONDS) as client:
@@ -114,8 +157,9 @@ async def call_simulator(pill_record: dict, patient_data: dict) -> dict:
 
         data = response.json()
         logger.info(
-            "Simulation for %s: disc=%.3f severe=%.4f mild=%.2f eff=%.3f",
+            "Simulation for %s (%d months): disc=%.3f severe=%.5f mild=%.3f eff=%.3f",
             pill_id,
+            data.get("n_months", n_months),
             data.get("discontinuation_probability", 0),
             data.get("severe_event_probability", 0),
             data.get("mild_side_effect_score", 0),

@@ -1,14 +1,26 @@
 """
-Lightweight mock server mimicking the Cluster Model and Simulator Model APIs.
+⚠️  DEPRECATED — Both real models are now deployed on Red Hat OpenShift.
 
-Runs locally on port 8001. The agent hits this server via environment variables:
+    Cluster Model   → CLUSTER_API_URL   → POST /api/v1/cluster/predict
+    Simulator Model → SIMULATOR_API_URL → POST /api/v1/simulator/simulate
+
+This mock server is kept ONLY as a local development fallback (e.g. for
+offline work or CI environments without access to the real cluster).
+It must NOT be used in production and must NOT be included in the
+production build.
+
+To run against the real models, set the environment variables to the
+real OpenShift routes and do NOT start this server.
+
+────────────────────────────────────────────────────────────────────────
+Original purpose (no longer primary):
+Lightweight mock server mimicking the Cluster Model and Simulator Model
+APIs for local development and integration tests.
+
+Ran locally on port 8001. The agent would hit this server via:
     CLUSTER_API_URL=http://localhost:8001/cluster/predict
     SIMULATOR_API_URL=http://localhost:8001/simulator/simulate
-
-This server is a development and testing tool ONLY.
-It is never deployed and must not be included in the production build.
-
-REMOVE WHEN: Real models are deployed on Red Hat OpenShift.
+────────────────────────────────────────────────────────────────────────
 """
 
 import random
@@ -128,7 +140,14 @@ PILL_PROFILES = {
 @app.post("/simulator/simulate")
 def simulator_simulate(body: SimulatorRequest):
     """
-    Mimics the Simulator Model API response.
+    [DEPRECATED MOCK] Mimics the Simulator Model API response.
+
+    The real model (models/simulation/serve.py) returns a full 12-month
+    trajectory (symptom_probs, satisfaction) plus the 4 derived summary
+    metrics below. This mock returns only the 4 summary metrics for
+    backward compatibility with integration tests.
+
+    Set SIMULATOR_API_URL to the real OpenShift route to use the real model.
     Returns deterministic results for known pills, seeded random for unknown.
     """
     # Extract pill identifier from combo_id (new format) or fall back to legacy fields
@@ -164,10 +183,22 @@ def simulator_simulate(body: SimulatorRequest):
 
 @app.get("/health")
 def health():
-    return {"status": "ok", "mode": "MOCK — not for production"}
+    return {
+        "status": "ok",
+        "mode": "MOCK — DEPRECATED. Use real OpenShift-deployed models for production.",
+    }
 
 
 # ── Entry point ─────────────────────────────────────────────────────────────
 
+
 if __name__ == "__main__":
+    import warnings
+    warnings.warn(
+        "\n\n⚠️  Starting DEPRECATED mock server.\n"
+        "   Both real models are deployed on Red Hat OpenShift.\n"
+        "   Set CLUSTER_API_URL and SIMULATOR_API_URL to the real routes.\n",
+        DeprecationWarning,
+        stacklevel=1,
+    )
     uvicorn.run("tests.mock_server:app", host="0.0.0.0", port=8001, reload=True)

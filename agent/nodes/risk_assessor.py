@@ -58,18 +58,40 @@ def run(state: SystemState) -> dict:
     for pill_id in candidate_pool:
         pill = get_pill_by_id(pill_id)
         if pill:
-            substance = pill.get('substance_name', 'unknown')
-            is_combined = 'ETHINYL ESTRADIOL' in str(substance).upper()
-            pill_type = 'combined (estrogen+progestin)' if is_combined else 'progestin-only'
-            
+            # Derive pill type from the pill_type column (combined_monophasic /
+            # combined_multiphasic / progestin_only)
+            raw_pill_type = str(pill.get('pill_type', '')).lower()
+            is_combined = raw_pill_type.startswith('combined')
+            pill_type_label = 'combined (estrogen+progestin)' if is_combined else 'progestin-only'
+
+            # Build human-readable substance string from separate columns
+            estrogen  = pill.get('estrogen', '')
+            est_dose  = pill.get('estrogen_dose_mcg', '')
+            progestin = pill.get('progestin', '')
+            pro_dose  = pill.get('progestin_dose_mg', '')
+            if is_combined and estrogen and progestin:
+                substance = f"{estrogen} {est_dose}mcg + {progestin} {pro_dose}mg"
+            elif progestin:
+                substance = f"{progestin} {pro_dose}mg"
+            else:
+                substance = 'unknown'
+
+            # Brand examples (CSV column: known_brand_examples)
+            brand_examples = str(pill.get('known_brand_examples', '') or '').strip()
+            brand_display = brand_examples if brand_examples and brand_examples != 'nan' else '—'
+
             # Include a short excerpt from warnings/contraindications for LLM context
-            warnings_text = str(pill.get('warnings', '') or '').strip()[:300]
-            contraind_text = str(pill.get('contraindications', '') or '').strip()[:200]
-            boxed_text = str(pill.get('boxed_warning', '') or '').strip()[:200]
-            
+            warnings_text = str(pill.get('label_warnings', '') or '').strip()[:300]
+            contraind_text = str(pill.get('label_contraindications', '') or '').strip()[:200]
+            boxed_text = str(pill.get('label_boxed_warning', '') or '').strip()[:200]
+            # Treat pandas NaN-string as empty
+            warnings_text  = '' if warnings_text  == 'nan' else warnings_text
+            contraind_text = '' if contraind_text == 'nan' else contraind_text
+            boxed_text     = '' if boxed_text     == 'nan' else boxed_text
+
             candidate_details.append(
-                f"  - {pill_id}: {pill.get('brand_name', '?')} / {pill.get('generic_name', '?')}\n"
-                f"    type={pill_type}, substance={substance}\n"
+                f"  - {pill_id}: {brand_display}\n"
+                f"    type={pill_type_label}, substance={substance}\n"
                 f"    boxed_warning={boxed_text or 'none'}\n"
                 f"    contraindications_excerpt={contraind_text or 'none'}\n"
                 f"    warnings_excerpt={warnings_text or 'none'}"
@@ -191,8 +213,7 @@ def _assess_risks(
         for pill_id in candidate_pool:
             pill = get_pill_by_id(pill_id)
             if pill:
-                substance = str(pill.get("substance_name", "")).upper()
-                is_combined = "ETHINYL ESTRADIOL" in substance
+                is_combined = str(pill.get("pill_type", "")).lower().startswith("combined")
                 # Higher base risk for combined pills if patient has CV/VTE risk factors
                 if is_combined and (patient_has_vte or patient_has_smoking or patient_has_cv_risk):
                     base_risk = 0.6
