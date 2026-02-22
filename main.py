@@ -14,7 +14,7 @@ import os
 from contextlib import asynccontextmanager
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -22,6 +22,8 @@ from pydantic import BaseModel, Field
 load_dotenv()
 
 from agent.graph import agent_graph
+from agent.pdf_parser import pages_to_document, parse_pdf
+from agent.patient_extractor import extract_patient_data
 
 # ── Logging ─────────────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -69,6 +71,19 @@ class PatientInput(BaseModel):
     pathologies: list[str] = Field(default_factory=list, description="Active diagnosed conditions")
     habits: list[str] = Field(default_factory=list, description="Lifestyle habits")
     medical_history: list[str] = Field(default_factory=list, description="Past medical events")
+
+
+class PDFExtractionResult(BaseModel):
+    """Patient data extracted from an uploaded medical PDF.  Returned to the
+    frontend so the user can review and adjust values before submitting the
+    final recommendation request."""
+
+    age: int | None = Field(None, description="Patient age, or null if not found in the document")
+    pathologies: list[str] = Field(default_factory=list, description="Active diagnosed conditions")
+    habits: list[str] = Field(default_factory=list, description="Lifestyle habits")
+    medical_history: list[str] = Field(default_factory=list, description="Past medical events")
+    pages_parsed: int = Field(0, description="Number of PDF pages that were parsed")
+    parser_backend: str = Field("", description="Which parser was used: 'dots_ocr' or 'pymupdf'")
 
 
 class PillRecommendation(BaseModel):
@@ -147,6 +162,61 @@ async def recommend(patient: PatientInput):
         raise HTTPException(status_code=500, detail="Internal agent error")
 
     return _build_output(final_state)
+
+
+@app.post("/api/v1/patient/upload-pdf", response_model=PDFExtractionResult)
+async def upload_pdf(file: UploadFile = File(...)):
+    """
+    Upload a medical PDF (cartella clinica / FSE) and extract patient data.
+
+    The response pre-fills the intake form on the frontend.  The user reviews
+    the extracted values and submits the confirmed data via POST /recommend.
+
+    Supported formats: PDF only.
+    Parser: dots.ocr (if DOTS_OCR_URL env var is set) with pymupdf fallback.
+    """
+    if file.content_type not in ("application/pdf", "application/octet-stream"):
+        # Some browsers send application/octet-stream for PDFs — accept both.
+        # We do a secondary check by inspecting the file magic bytes below.
+        pass
+
+    logger.info("PDF upload: filename=%s, content_type=%s", file.filename, file.content_type)
+
+    pdf_bytes = await file.read()
+    if len(pdf_bytes) < 5 or pdf_bytes[:4] != b"%PDF":
+        raise HTTPException(
+            status_code=422,
+            detail="Uploaded file does not appear to be a valid PDF.",
+        )
+
+    try:
+        pages = parse_pdf(pdf_bytes)
+    except Exception as exc:
+        logger.exception("PDF parsing failed")
+        raise HTTPException(status_code=500, detail=f"PDF parsing failed: {exc}")
+
+    if not pages:
+        raise HTTPException(status_code=422, detail="PDF contains no parseable pages.")
+
+    document_text = pages_to_document(pages)
+
+    try:
+        patient_data = extract_patient_data(document_text)
+    except Exception as exc:
+        logger.exception("Patient data extraction failed")
+        raise HTTPException(status_code=500, detail=f"Extraction failed: {exc}")
+
+    # Determine which backend was used (all pages come from the same backend)
+    parser_backend = pages[0].get("source", "unknown") if pages else "unknown"
+
+    return PDFExtractionResult(
+        age=patient_data.get("age"),
+        pathologies=patient_data.get("pathologies", []),
+        habits=patient_data.get("habits", []),
+        medical_history=patient_data.get("medical_history", []),
+        pages_parsed=len(pages),
+        parser_backend=parser_backend,
+    )
 
 
 @app.get("/health")

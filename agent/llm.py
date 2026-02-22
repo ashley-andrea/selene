@@ -3,10 +3,9 @@ LLM Factory — returns the appropriate LLM client based on the LLM_PROVIDER
 environment variable.
 
 Supported providers:
-  - claude        → langchain-anthropic (production)
-  - groq          → langchain-openai with Groq endpoint (free tier dev)
-  - ollama        → langchain-ollama (local)
-  - openai_compat → langchain-openai with custom base URL
+  - claude  → langchain-anthropic (production)
+  - crusoe  → langchain-openai with Crusoe Managed Inference endpoint (dev/staging)
+  - ollama  → langchain-ollama (local)
 
 Default is 'claude' for production safety.
 """
@@ -33,25 +32,17 @@ def get_llm():
             temperature=0,
         )
 
+    elif provider == "crusoe":
+        return ChatOpenAI(
+            base_url="https://api.crusoe.ai/v1",
+            api_key=os.getenv("CRUSOE_API_KEY"),
+            model=os.getenv("CRUSOE_MODEL", "meta-llama/Llama-3.3-70B-Instruct"),
+            temperature=0,
+        )
+
     elif provider == "ollama":
         return ChatOllama(
             model=os.getenv("OLLAMA_MODEL", "llama3.1"),
-            temperature=0,
-        )
-
-    elif provider == "groq":
-        return ChatOpenAI(
-            base_url="https://api.groq.com/openai/v1",
-            api_key=os.getenv("GROQ_API_KEY"),
-            model=os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile"),
-            temperature=0,
-        )
-
-    elif provider == "openai_compat":
-        return ChatOpenAI(
-            base_url=os.getenv("OPENAI_BASE_URL"),
-            api_key=os.getenv("OPENAI_API_KEY"),
-            model=os.getenv("OPENAI_MODEL"),
             temperature=0,
         )
 

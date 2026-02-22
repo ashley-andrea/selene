@@ -57,21 +57,12 @@ def get_llm():
             temperature=0
         )
 
-    elif provider == "groq":
-        # Recommended free-tier option: fast inference, OpenAI-compatible
+    elif provider == "crusoe":
+        # Crusoe Managed Inference — OpenAI-compatible, dev/staging
         return ChatOpenAI(
-            base_url="https://api.groq.com/openai/v1",
-            api_key=os.getenv("GROQ_API_KEY"),
-            model=os.getenv("GROQ_MODEL", "llama-3.1-70b-versatile"),
-            temperature=0
-        )
-
-    elif provider == "openai_compat":
-        # Generic OpenAI-compatible endpoint (Together, OpenRouter, etc.)
-        return ChatOpenAI(
-            base_url=os.getenv("OPENAI_BASE_URL"),
-            api_key=os.getenv("OPENAI_API_KEY"),
-            model=os.getenv("OPENAI_MODEL"),
+            base_url="https://api.crusoe.ai/v1",
+            api_key=os.getenv("CRUSOE_API_KEY"),
+            model=os.getenv("CRUSOE_MODEL", "meta-llama/Llama-3.3-70B-Instruct"),
             temperature=0
         )
 
@@ -88,13 +79,13 @@ Use `claude-sonnet-4-6` (not Opus) for deployment. The agent's reasoning tasks a
 
 All configuration is environment-variable driven. Create `.env` files for each environment — never commit secrets.
 
-### `.env.local` (development with Groq)
+### `.env.local` (development with Crusoe)
 
 ```bash
 # Agent
-LLM_PROVIDER=groq
-GROQ_API_KEY=your_groq_api_key
-GROQ_MODEL=llama-3.1-70b-versatile
+LLM_PROVIDER=crusoe
+CRUSOE_API_KEY=your_crusoe_api_key
+CRUSOE_MODEL=meta-llama/Llama-3.3-70B-Instruct
 
 # Model APIs (Red Hat OpenShift)
 CLUSTER_API_URL=http://localhost:8001/predict   # or staging URL
@@ -572,7 +563,7 @@ langgraph = "^0.2"
 langchain-core = "^0.3"
 langchain-anthropic = "^0.2"     # Claude
 langchain-ollama = "^0.1"        # Local Ollama
-langchain-openai = "^0.2"        # Groq / OpenAI-compat
+langchain-openai = "^0.2"        # Crusoe / OpenAI-compat
 httpx = "^0.27"                  # Async HTTP for model API calls
 fastapi = "^0.115"
 uvicorn = "^0.30"
@@ -613,7 +604,7 @@ No code changes needed. LangGraph picks this up automatically.
 | Iterative loop | LangGraph conditional edges |
 | Persistent state | LangGraph `StateGraph` with `SystemState` TypedDict |
 | LLM switching (local → Claude) | Factory pattern in `llm.py` driven by `LLM_PROVIDER` env var |
-| Free-tier testing | Groq (`llama-3.1-70b-versatile`) via OpenAI-compat endpoint |
+| Dev/staging LLM | Crusoe Managed Inference (`meta-llama/Llama-3.3-70B-Instruct`) via OpenAI-compat endpoint |
 | Production LLM | `claude-sonnet-4-6` via `langchain-anthropic` |
 | HTTP model API calls | `httpx` async clients in `agent/tools/` |
 | Concurrent simulation | `asyncio.gather` across candidate pool |
