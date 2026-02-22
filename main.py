@@ -175,7 +175,7 @@ class PDFExtractionResult(BaseModel):
 
 class PillRecommendation(BaseModel):
     """Detailed information about a recommended pill."""
-    
+
     pill_id: str
     rank: int  # 1, 2, or 3
     utility_score: float
@@ -184,6 +184,33 @@ class PillRecommendation(BaseModel):
     mild_side_effect_score: float
     contraceptive_effectiveness: float
     reason_codes: list[str]
+
+    # ── Time-series trajectory data for plotting ─────────────────────────────
+    # months: [1, 2, ..., 12] — x-axis shared by all curves below
+    months: list[int] = Field(
+        default_factory=list,
+        description="Month indices [1..N] shared by all trajectory arrays",
+    )
+    # symptom_probs: all 18 binary-target channels from the simulator
+    #   Key names (always present when months is non-empty):
+    #     still_taking          — adherence probability (1 − discontinuation curve)
+    #     sym_nausea, sym_headache, sym_breast_tenderness, sym_spotting,
+    #     sym_mood_worsened, sym_depression_episode, sym_anxiety,
+    #     sym_libido_decreased, sym_weight_gain, sym_acne_worsened, sym_hair_loss
+    #     evt_dvt, evt_pe, evt_stroke  — serious adverse events
+    #     sym_bloating, sym_fatigue, sym_irregular_bleeding  (remaining targets)
+    symptom_probs: dict[str, list[float]] = Field(
+        default_factory=dict,
+        description=(
+            "Per-month probabilities for all 18 simulator binary targets. "
+            "Keys: still_taking, sym_*, evt_*. Values: list of floats aligned with months."
+        ),
+    )
+    # satisfaction: monthly score 1-10 from the satisfaction regression model
+    satisfaction: list[float] = Field(
+        default_factory=list,
+        description="Predicted monthly satisfaction score (1-10 scale) aligned with months",
+    )
 
 
 class RecommendationOutput(BaseModel):
@@ -402,6 +429,10 @@ def _build_output(state: dict) -> RecommendationOutput:
             mild_side_effect_score=sim.get("mild_side_effect_score", 0.0),
             contraceptive_effectiveness=sim.get("contraceptive_effectiveness", 0.0),
             reason_codes=reason_codes,
+            # Trajectory data for time-series plots
+            months=sim.get("months", []),
+            symptom_probs=sim.get("symptom_probs", {}),
+            satisfaction=sim.get("satisfaction", []),
         ))
     
     return RecommendationOutput(
