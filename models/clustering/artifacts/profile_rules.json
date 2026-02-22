@@ -1,0 +1,1369 @@
+{
+  "k": 12,
+  "inference_threshold": 0.4,
+  "centroid_thresh_cat4": 0.15,
+  "centroid_thresh_cat3": 0.25,
+  "feature_order": [
+    "age",
+    "obs_bmi",
+    "obs_systolic_bp",
+    "obs_diastolic_bp",
+    "obs_phq9_score",
+    "obs_testosterone",
+    "obs_smoker",
+    "cond_migraine_with_aura",
+    "cond_stroke",
+    "cond_mi",
+    "cond_dvt",
+    "cond_breast_cancer",
+    "cond_lupus",
+    "cond_thrombophilia",
+    "cond_atrial_fibrillation",
+    "cond_liver_disease",
+    "cond_hypertension",
+    "cond_migraine",
+    "cond_gallstones",
+    "cond_diabetes",
+    "cond_prediabetes",
+    "cond_epilepsy",
+    "cond_chronic_kidney_disease",
+    "cond_sleep_apnea",
+    "cond_pcos",
+    "cond_endometriosis",
+    "cond_depression",
+    "cond_hypothyroidism",
+    "cond_rheumatoid_arthritis",
+    "cond_fibromyalgia",
+    "cond_osteoporosis",
+    "cond_asthma"
+  ],
+  "continuous_features": [
+    "age",
+    "obs_bmi",
+    "obs_systolic_bp",
+    "obs_diastolic_bp",
+    "obs_phq9_score",
+    "obs_testosterone"
+  ],
+  "binary_features": [
+    "obs_smoker",
+    "cond_migraine_with_aura",
+    "cond_stroke",
+    "cond_mi",
+    "cond_dvt",
+    "cond_breast_cancer",
+    "cond_lupus",
+    "cond_thrombophilia",
+    "cond_atrial_fibrillation",
+    "cond_liver_disease",
+    "cond_hypertension",
+    "cond_migraine",
+    "cond_gallstones",
+    "cond_diabetes",
+    "cond_prediabetes",
+    "cond_epilepsy",
+    "cond_chronic_kidney_disease",
+    "cond_sleep_apnea",
+    "cond_pcos",
+    "cond_endometriosis",
+    "cond_depression",
+    "cond_hypothyroidism",
+    "cond_rheumatoid_arthritis",
+    "cond_fibromyalgia",
+    "cond_osteoporosis",
+    "cond_asthma"
+  ],
+  "all_pill_ids": [
+    "EE20_LNG90",
+    "EE30_LNG150",
+    "EE35_NET500_1000",
+    "EE20_NET1000",
+    "EE25_35_NGM",
+    "EE30_DSG150",
+    "EE30_DRSP3",
+    "EE20_DRSP3",
+    "NET_PO_350"
+  ],
+  "all_combined_ids": [
+    "EE20_LNG90",
+    "EE30_LNG150",
+    "EE35_NET500_1000",
+    "EE20_NET1000",
+    "EE25_35_NGM",
+    "EE30_DSG150",
+    "EE30_DRSP3",
+    "EE20_DRSP3"
+  ],
+  "profiles": {
+    "0": {
+      "label": "Profile 0: Rheum. Arthritis + Sleep Apnea",
+      "n_patients_train": 14,
+      "pct_train": 0.3,
+      "blocked_combos": {
+        "EE20_LNG90": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 21.4%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 42.9%]"
+        ],
+        "EE30_LNG150": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 21.4%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 42.9%]"
+        ],
+        "EE35_NET500_1000": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 21.4%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 42.9%]"
+        ],
+        "EE20_NET1000": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 21.4%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 42.9%]"
+        ],
+        "EE25_35_NGM": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 21.4%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 42.9%]"
+        ],
+        "EE30_DSG150": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 21.4%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 42.9%]"
+        ],
+        "EE30_DRSP3": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 21.4%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 42.9%]"
+        ],
+        "EE20_DRSP3": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 21.4%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 42.9%]"
+        ],
+        "NET_PO_350": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 21.4%]"
+        ]
+      },
+      "all_blocked_ids": [
+        "EE20_DRSP3",
+        "EE20_LNG90",
+        "EE20_NET1000",
+        "EE25_35_NGM",
+        "EE30_DRSP3",
+        "EE30_DSG150",
+        "EE30_LNG150",
+        "EE35_NET500_1000",
+        "NET_PO_350"
+      ],
+      "top_elevated_features": [
+        {
+          "feature": "cond_rheumatoid_arthritis",
+          "label": "Rheum. Arthritis",
+          "cluster_mean": 0.3571,
+          "pop_mean": 0.0012,
+          "elevation": 0.3559
+        },
+        {
+          "feature": "cond_sleep_apnea",
+          "label": "Sleep Apnea",
+          "cluster_mean": 0.3571,
+          "pop_mean": 0.0019,
+          "elevation": 0.3552
+        },
+        {
+          "feature": "cond_hypertension",
+          "label": "Hypertension",
+          "cluster_mean": 0.4286,
+          "pop_mean": 0.0933,
+          "elevation": 0.3353
+        },
+        {
+          "feature": "cond_endometriosis",
+          "label": "Endometriosis",
+          "cluster_mean": 0.3571,
+          "pop_mean": 0.0663,
+          "elevation": 0.2908
+        },
+        {
+          "feature": "cond_breast_cancer",
+          "label": "Breast Cancer",
+          "cluster_mean": 0.2143,
+          "pop_mean": 0.0085,
+          "elevation": 0.2058
+        },
+        {
+          "feature": "cond_depression",
+          "label": "Depression",
+          "cluster_mean": 0.2857,
+          "pop_mean": 0.0831,
+          "elevation": 0.2026
+        },
+        {
+          "feature": "cond_diabetes",
+          "label": "Diabetes",
+          "cluster_mean": 0.1429,
+          "pop_mean": 0.0221,
+          "elevation": 0.1208
+        },
+        {
+          "feature": "cond_migraine",
+          "label": "Migraine",
+          "cluster_mean": 0.2143,
+          "pop_mean": 0.102,
+          "elevation": 0.1123
+        }
+      ],
+      "centroid": {
+        "age": 44.2697,
+        "obs_bmi": 28.6286,
+        "obs_systolic_bp": 129.3571,
+        "obs_diastolic_bp": 87.0,
+        "obs_phq9_score": 12.2143,
+        "obs_testosterone": 99.8,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.0714,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.2143,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.0,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.4286,
+        "cond_migraine": 0.2143,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.1429,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.0,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.3571,
+        "cond_pcos": 0.0,
+        "cond_endometriosis": 0.3571,
+        "cond_depression": 0.2857,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.3571,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.0
+      }
+    },
+    "1": {
+      "label": "Profile 1: Migraine + Depression",
+      "n_patients_train": 661,
+      "pct_train": 16.1,
+      "blocked_combos": {},
+      "all_blocked_ids": [],
+      "top_elevated_features": [
+        {
+          "feature": "cond_migraine",
+          "label": "Migraine",
+          "cluster_mean": 0.463,
+          "pop_mean": 0.102,
+          "elevation": 0.3609
+        },
+        {
+          "feature": "cond_depression",
+          "label": "Depression",
+          "cluster_mean": 0.354,
+          "pop_mean": 0.0831,
+          "elevation": 0.2709
+        },
+        {
+          "feature": "cond_endometriosis",
+          "label": "Endometriosis",
+          "cluster_mean": 0.2784,
+          "pop_mean": 0.0663,
+          "elevation": 0.2121
+        }
+      ],
+      "centroid": {
+        "age": 35.7495,
+        "obs_bmi": 27.9714,
+        "obs_systolic_bp": 118.9289,
+        "obs_diastolic_bp": 78.505,
+        "obs_phq9_score": 14.0892,
+        "obs_testosterone": 99.8,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.0,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.0,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.0,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.0,
+        "cond_migraine": 0.463,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.0,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.0,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.0,
+        "cond_pcos": 0.0,
+        "cond_endometriosis": 0.2784,
+        "cond_depression": 0.354,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.0
+      }
+    },
+    "2": {
+      "label": "Profile 2: Diabetes + Breast Cancer",
+      "n_patients_train": 66,
+      "pct_train": 1.6,
+      "blocked_combos": {
+        "EE20_LNG90": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 45.6%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 52.8%]"
+        ],
+        "EE30_LNG150": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 45.6%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 52.8%]"
+        ],
+        "EE35_NET500_1000": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 45.6%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 52.8%]"
+        ],
+        "EE20_NET1000": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 45.6%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 52.8%]"
+        ],
+        "EE25_35_NGM": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 45.6%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 52.8%]"
+        ],
+        "EE30_DSG150": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 45.6%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 52.8%]"
+        ],
+        "EE30_DRSP3": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 45.6%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 52.8%]"
+        ],
+        "EE20_DRSP3": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 45.6%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 52.8%]"
+        ],
+        "NET_PO_350": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 45.6%]"
+        ]
+      },
+      "all_blocked_ids": [
+        "EE20_DRSP3",
+        "EE20_LNG90",
+        "EE20_NET1000",
+        "EE25_35_NGM",
+        "EE30_DRSP3",
+        "EE30_DSG150",
+        "EE30_LNG150",
+        "EE35_NET500_1000",
+        "NET_PO_350"
+      ],
+      "top_elevated_features": [
+        {
+          "feature": "cond_diabetes",
+          "label": "Diabetes",
+          "cluster_mean": 0.5283,
+          "pop_mean": 0.0221,
+          "elevation": 0.5062
+        },
+        {
+          "feature": "cond_breast_cancer",
+          "label": "Breast Cancer",
+          "cluster_mean": 0.4564,
+          "pop_mean": 0.0085,
+          "elevation": 0.4479
+        },
+        {
+          "feature": "cond_depression",
+          "label": "Depression",
+          "cluster_mean": 0.1826,
+          "pop_mean": 0.0831,
+          "elevation": 0.0995
+        },
+        {
+          "feature": "cond_migraine",
+          "label": "Migraine",
+          "cluster_mean": 0.1804,
+          "pop_mean": 0.102,
+          "elevation": 0.0783
+        },
+        {
+          "feature": "cond_hypertension",
+          "label": "Hypertension",
+          "cluster_mean": 0.1514,
+          "pop_mean": 0.0933,
+          "elevation": 0.0581
+        }
+      ],
+      "centroid": {
+        "age": 41.1385,
+        "obs_bmi": 27.9912,
+        "obs_systolic_bp": 119.2237,
+        "obs_diastolic_bp": 79.8144,
+        "obs_phq9_score": 14.0063,
+        "obs_testosterone": 99.8,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.0,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.4564,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.0457,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.1514,
+        "cond_migraine": 0.1804,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.5283,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.0152,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.0,
+        "cond_pcos": 0.0,
+        "cond_endometriosis": 0.0,
+        "cond_depression": 0.1826,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.0
+      }
+    },
+    "3": {
+      "label": "Profile 3: Hypertension + Diabetes",
+      "n_patients_train": 57,
+      "pct_train": 1.4,
+      "blocked_combos": {
+        "EE20_LNG90": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 100.0%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 56.0%]"
+        ],
+        "EE30_LNG150": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 100.0%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 56.0%]"
+        ],
+        "EE35_NET500_1000": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 100.0%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 56.0%]"
+        ],
+        "EE20_NET1000": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 100.0%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 56.0%]"
+        ],
+        "EE25_35_NGM": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 100.0%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 56.0%]"
+        ],
+        "EE30_DSG150": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 100.0%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 56.0%]"
+        ],
+        "EE30_DRSP3": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 100.0%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 56.0%]"
+        ],
+        "EE20_DRSP3": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 100.0%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 56.0%]"
+        ]
+      },
+      "all_blocked_ids": [
+        "EE20_DRSP3",
+        "EE20_LNG90",
+        "EE20_NET1000",
+        "EE25_35_NGM",
+        "EE30_DRSP3",
+        "EE30_DSG150",
+        "EE30_LNG150",
+        "EE35_NET500_1000"
+      ],
+      "top_elevated_features": [
+        {
+          "feature": "cond_hypertension",
+          "label": "Hypertension",
+          "cluster_mean": 1.0,
+          "pop_mean": 0.0933,
+          "elevation": 0.9067
+        },
+        {
+          "feature": "cond_diabetes",
+          "label": "Diabetes",
+          "cluster_mean": 0.5604,
+          "pop_mean": 0.0221,
+          "elevation": 0.5383
+        },
+        {
+          "feature": "cond_endometriosis",
+          "label": "Endometriosis",
+          "cluster_mean": 0.4028,
+          "pop_mean": 0.0663,
+          "elevation": 0.3365
+        },
+        {
+          "feature": "cond_epilepsy",
+          "label": "Epilepsy",
+          "cluster_mean": 0.1051,
+          "pop_mean": 0.0211,
+          "elevation": 0.0839
+        },
+        {
+          "feature": "cond_migraine_with_aura",
+          "label": "Migraine+Aura",
+          "cluster_mean": 0.1051,
+          "pop_mean": 0.0425,
+          "elevation": 0.0626
+        }
+      ],
+      "centroid": {
+        "age": 41.9285,
+        "obs_bmi": 28.7588,
+        "obs_systolic_bp": 120.1232,
+        "obs_diastolic_bp": 82.194,
+        "obs_phq9_score": 12.8248,
+        "obs_testosterone": 99.8,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.1051,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.0,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.0,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 1.0,
+        "cond_migraine": 0.0,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.5604,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.1051,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.035,
+        "cond_pcos": 0.0,
+        "cond_endometriosis": 0.4028,
+        "cond_depression": 0.0,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.0
+      }
+    },
+    "4": {
+      "label": "Profile 4: Thrombophilia + Endometriosis",
+      "n_patients_train": 138,
+      "pct_train": 3.4,
+      "blocked_combos": {
+        "EE20_LNG90": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 83.3%]"
+        ],
+        "EE30_LNG150": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 83.3%]"
+        ],
+        "EE35_NET500_1000": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 83.3%]"
+        ],
+        "EE20_NET1000": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 83.3%]"
+        ],
+        "EE25_35_NGM": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 83.3%]"
+        ],
+        "EE30_DSG150": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 83.3%]"
+        ],
+        "EE30_DRSP3": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 83.3%]"
+        ],
+        "EE20_DRSP3": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 83.3%]"
+        ]
+      },
+      "all_blocked_ids": [
+        "EE20_DRSP3",
+        "EE20_LNG90",
+        "EE20_NET1000",
+        "EE25_35_NGM",
+        "EE30_DRSP3",
+        "EE30_DSG150",
+        "EE30_LNG150",
+        "EE35_NET500_1000"
+      ],
+      "top_elevated_features": [
+        {
+          "feature": "cond_thrombophilia",
+          "label": "Thrombophilia",
+          "cluster_mean": 0.8333,
+          "pop_mean": 0.0352,
+          "elevation": 0.7981
+        },
+        {
+          "feature": "cond_endometriosis",
+          "label": "Endometriosis",
+          "cluster_mean": 0.1739,
+          "pop_mean": 0.0663,
+          "elevation": 0.1076
+        },
+        {
+          "feature": "cond_migraine_with_aura",
+          "label": "Migraine+Aura",
+          "cluster_mean": 0.1449,
+          "pop_mean": 0.0425,
+          "elevation": 0.1024
+        },
+        {
+          "feature": "cond_epilepsy",
+          "label": "Epilepsy",
+          "cluster_mean": 0.0942,
+          "pop_mean": 0.0211,
+          "elevation": 0.0731
+        },
+        {
+          "feature": "cond_depression",
+          "label": "Depression",
+          "cluster_mean": 0.1377,
+          "pop_mean": 0.0831,
+          "elevation": 0.0546
+        }
+      ],
+      "centroid": {
+        "age": 37.0157,
+        "obs_bmi": 27.9934,
+        "obs_systolic_bp": 118.8628,
+        "obs_diastolic_bp": 77.6047,
+        "obs_phq9_score": 14.3842,
+        "obs_testosterone": 99.8,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.1449,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.0,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.8333,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.0,
+        "cond_migraine": 0.1232,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.0,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.0942,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.0,
+        "cond_pcos": 0.0,
+        "cond_endometriosis": 0.1739,
+        "cond_depression": 0.1377,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.0
+      }
+    },
+    "5": {
+      "label": "Profile 5: Baseline / Low-Risk",
+      "n_patients_train": 2403,
+      "pct_train": 58.4,
+      "blocked_combos": {},
+      "all_blocked_ids": [],
+      "top_elevated_features": [],
+      "centroid": {
+        "age": 29.6032,
+        "obs_bmi": 26.4091,
+        "obs_systolic_bp": 118.7062,
+        "obs_diastolic_bp": 78.7045,
+        "obs_phq9_score": 13.8926,
+        "obs_testosterone": 99.8,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.0,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.0,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.0,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.0,
+        "cond_migraine": 0.0,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.0,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.0,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.0,
+        "cond_pcos": 0.0,
+        "cond_endometriosis": 0.0,
+        "cond_depression": 0.0,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.0
+      }
+    },
+    "6": {
+      "label": "Profile 6: PCOS + Thrombophilia",
+      "n_patients_train": 13,
+      "pct_train": 0.3,
+      "blocked_combos": {
+        "EE20_LNG90": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 46.1%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 30.8%]",
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 38.4%]"
+        ],
+        "EE30_LNG150": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 46.1%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 30.8%]",
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 38.4%]"
+        ],
+        "EE35_NET500_1000": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 46.1%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 30.8%]",
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 38.4%]"
+        ],
+        "EE20_NET1000": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 46.1%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 30.8%]",
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 38.4%]"
+        ],
+        "EE25_35_NGM": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 46.1%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 30.8%]",
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 38.4%]"
+        ],
+        "EE30_DSG150": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 46.1%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 30.8%]",
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 38.4%]"
+        ],
+        "EE30_DRSP3": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 46.1%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 30.8%]",
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 38.4%]"
+        ],
+        "EE20_DRSP3": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 15.4%]",
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 46.1%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 30.8%]",
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 38.4%]"
+        ],
+        "NET_PO_350": [
+          "WHO MEC Cat 4: Breast cancer \u2014 all hormonal OCPs contraindicated (WHO MEC Cat 4) [profile prevalence: 15.4%]"
+        ]
+      },
+      "all_blocked_ids": [
+        "EE20_DRSP3",
+        "EE20_LNG90",
+        "EE20_NET1000",
+        "EE25_35_NGM",
+        "EE30_DRSP3",
+        "EE30_DSG150",
+        "EE30_LNG150",
+        "EE35_NET500_1000",
+        "NET_PO_350"
+      ],
+      "top_elevated_features": [
+        {
+          "feature": "cond_pcos",
+          "label": "PCOS",
+          "cluster_mean": 1.0,
+          "pop_mean": 0.0787,
+          "elevation": 0.9213
+        },
+        {
+          "feature": "cond_thrombophilia",
+          "label": "Thrombophilia",
+          "cluster_mean": 0.461,
+          "pop_mean": 0.0352,
+          "elevation": 0.4258
+        },
+        {
+          "feature": "cond_epilepsy",
+          "label": "Epilepsy",
+          "cluster_mean": 0.3841,
+          "pop_mean": 0.0211,
+          "elevation": 0.363
+        },
+        {
+          "feature": "cond_hypertension",
+          "label": "Hypertension",
+          "cluster_mean": 0.3075,
+          "pop_mean": 0.0933,
+          "elevation": 0.2142
+        },
+        {
+          "feature": "cond_breast_cancer",
+          "label": "Breast Cancer",
+          "cluster_mean": 0.1536,
+          "pop_mean": 0.0085,
+          "elevation": 0.1451
+        },
+        {
+          "feature": "cond_migraine",
+          "label": "Migraine",
+          "cluster_mean": 0.2314,
+          "pop_mean": 0.102,
+          "elevation": 0.1294
+        },
+        {
+          "feature": "cond_migraine_with_aura",
+          "label": "Migraine+Aura",
+          "cluster_mean": 0.1538,
+          "pop_mean": 0.0425,
+          "elevation": 0.1113
+        },
+        {
+          "feature": "cond_atrial_fibrillation",
+          "label": "Afib",
+          "cluster_mean": 0.0768,
+          "pop_mean": 0.0002,
+          "elevation": 0.0766
+        }
+      ],
+      "centroid": {
+        "age": 35.7037,
+        "obs_bmi": 26.0971,
+        "obs_systolic_bp": 119.1597,
+        "obs_diastolic_bp": 79.3786,
+        "obs_phq9_score": 13.6157,
+        "obs_testosterone": 84.8096,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.1538,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.1536,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.461,
+        "cond_atrial_fibrillation": 0.0768,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.3075,
+        "cond_migraine": 0.2314,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.0,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.3841,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.0,
+        "cond_pcos": 1.0,
+        "cond_endometriosis": 0.0,
+        "cond_depression": 0.0,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.0
+      }
+    },
+    "7": {
+      "label": "Profile 7: Epilepsy",
+      "n_patients_train": 65,
+      "pct_train": 1.6,
+      "blocked_combos": {
+        "EE20_LNG90": [
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 95.4%]"
+        ],
+        "EE30_LNG150": [
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 95.4%]"
+        ],
+        "EE35_NET500_1000": [
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 95.4%]"
+        ],
+        "EE20_NET1000": [
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 95.4%]"
+        ],
+        "EE25_35_NGM": [
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 95.4%]"
+        ],
+        "EE30_DSG150": [
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 95.4%]"
+        ],
+        "EE30_DRSP3": [
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 95.4%]"
+        ],
+        "EE20_DRSP3": [
+          "WHO MEC Cat 3: Epilepsy / AED interaction \u2014 enzyme-inducing AEDs reduce OCP efficacy (WHO MEC Cat 3 interaction) [profile prevalence: 95.4%]"
+        ]
+      },
+      "all_blocked_ids": [
+        "EE20_DRSP3",
+        "EE20_LNG90",
+        "EE20_NET1000",
+        "EE25_35_NGM",
+        "EE30_DRSP3",
+        "EE30_DSG150",
+        "EE30_LNG150",
+        "EE35_NET500_1000"
+      ],
+      "top_elevated_features": [
+        {
+          "feature": "cond_epilepsy",
+          "label": "Epilepsy",
+          "cluster_mean": 0.9538,
+          "pop_mean": 0.0211,
+          "elevation": 0.9327
+        }
+      ],
+      "centroid": {
+        "age": 30.9146,
+        "obs_bmi": 24.2077,
+        "obs_systolic_bp": 119.0554,
+        "obs_diastolic_bp": 79.0015,
+        "obs_phq9_score": 13.7231,
+        "obs_testosterone": 99.8,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.0,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.0,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.0,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.0,
+        "cond_migraine": 0.0,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.0,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.9538,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.0,
+        "cond_pcos": 0.0,
+        "cond_endometriosis": 0.0,
+        "cond_depression": 0.0,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0154,
+        "cond_osteoporosis": 0.0462,
+        "cond_asthma": 0.0
+      }
+    },
+    "8": {
+      "label": "Profile 8: PCOS + Hypertension",
+      "n_patients_train": 72,
+      "pct_train": 1.7,
+      "blocked_combos": {
+        "EE20_LNG90": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 62.5%]"
+        ],
+        "EE30_LNG150": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 62.5%]"
+        ],
+        "EE35_NET500_1000": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 62.5%]"
+        ],
+        "EE20_NET1000": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 62.5%]"
+        ],
+        "EE25_35_NGM": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 62.5%]"
+        ],
+        "EE30_DSG150": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 62.5%]"
+        ],
+        "EE30_DRSP3": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 62.5%]"
+        ],
+        "EE20_DRSP3": [
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 62.5%]"
+        ]
+      },
+      "all_blocked_ids": [
+        "EE20_DRSP3",
+        "EE20_LNG90",
+        "EE20_NET1000",
+        "EE25_35_NGM",
+        "EE30_DRSP3",
+        "EE30_DSG150",
+        "EE30_LNG150",
+        "EE35_NET500_1000"
+      ],
+      "top_elevated_features": [
+        {
+          "feature": "cond_pcos",
+          "label": "PCOS",
+          "cluster_mean": 1.0,
+          "pop_mean": 0.0787,
+          "elevation": 0.9213
+        },
+        {
+          "feature": "cond_hypertension",
+          "label": "Hypertension",
+          "cluster_mean": 0.6251,
+          "pop_mean": 0.0933,
+          "elevation": 0.5318
+        },
+        {
+          "feature": "cond_migraine",
+          "label": "Migraine",
+          "cluster_mean": 0.4999,
+          "pop_mean": 0.102,
+          "elevation": 0.3979
+        },
+        {
+          "feature": "cond_diabetes",
+          "label": "Diabetes",
+          "cluster_mean": 0.1806,
+          "pop_mean": 0.0221,
+          "elevation": 0.1585
+        },
+        {
+          "feature": "cond_depression",
+          "label": "Depression",
+          "cluster_mean": 0.125,
+          "pop_mean": 0.0831,
+          "elevation": 0.042
+        },
+        {
+          "feature": "cond_migraine_with_aura",
+          "label": "Migraine+Aura",
+          "cluster_mean": 0.0694,
+          "pop_mean": 0.0425,
+          "elevation": 0.0269
+        }
+      ],
+      "centroid": {
+        "age": 40.3692,
+        "obs_bmi": 29.1985,
+        "obs_systolic_bp": 122.9167,
+        "obs_diastolic_bp": 83.6407,
+        "obs_phq9_score": 13.875,
+        "obs_testosterone": 99.2131,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.0694,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.0,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.0,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.6251,
+        "cond_migraine": 0.4999,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.1806,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.0,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.0,
+        "cond_pcos": 1.0,
+        "cond_endometriosis": 0.0834,
+        "cond_depression": 0.125,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.0
+      }
+    },
+    "9": {
+      "label": "Profile 9: PCOS",
+      "n_patients_train": 239,
+      "pct_train": 5.8,
+      "blocked_combos": {},
+      "all_blocked_ids": [],
+      "top_elevated_features": [
+        {
+          "feature": "cond_pcos",
+          "label": "PCOS",
+          "cluster_mean": 1.0,
+          "pop_mean": 0.0787,
+          "elevation": 0.9213
+        }
+      ],
+      "centroid": {
+        "age": 34.2504,
+        "obs_bmi": 27.9983,
+        "obs_systolic_bp": 119.6945,
+        "obs_diastolic_bp": 78.7197,
+        "obs_phq9_score": 13.9414,
+        "obs_testosterone": 101.1067,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.0586,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.0,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.0377,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.0,
+        "cond_migraine": 0.0,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.0,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.0,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.0042,
+        "cond_pcos": 1.0,
+        "cond_endometriosis": 0.0921,
+        "cond_depression": 0.1046,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.0
+      }
+    },
+    "10": {
+      "label": "Profile 10: Hypertension + Migraine+Aura",
+      "n_patients_train": 360,
+      "pct_train": 8.7,
+      "blocked_combos": {
+        "EE20_LNG90": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 34.7%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 68.3%]"
+        ],
+        "EE30_LNG150": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 34.7%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 68.3%]"
+        ],
+        "EE35_NET500_1000": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 34.7%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 68.3%]"
+        ],
+        "EE20_NET1000": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 34.7%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 68.3%]"
+        ],
+        "EE25_35_NGM": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 34.7%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 68.3%]"
+        ],
+        "EE30_DSG150": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 34.7%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 68.3%]"
+        ],
+        "EE30_DRSP3": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 34.7%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 68.3%]"
+        ],
+        "EE20_DRSP3": [
+          "WHO MEC Cat 4: Migraine with aura \u2014 estrogen \u2191 ischemic stroke risk (WHO MEC Cat 4) [profile prevalence: 34.7%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 68.3%]"
+        ]
+      },
+      "all_blocked_ids": [
+        "EE20_DRSP3",
+        "EE20_LNG90",
+        "EE20_NET1000",
+        "EE25_35_NGM",
+        "EE30_DRSP3",
+        "EE30_DSG150",
+        "EE30_LNG150",
+        "EE35_NET500_1000"
+      ],
+      "top_elevated_features": [
+        {
+          "feature": "cond_hypertension",
+          "label": "Hypertension",
+          "cluster_mean": 0.6832,
+          "pop_mean": 0.0933,
+          "elevation": 0.5899
+        },
+        {
+          "feature": "cond_migraine_with_aura",
+          "label": "Migraine+Aura",
+          "cluster_mean": 0.3473,
+          "pop_mean": 0.0425,
+          "elevation": 0.3048
+        }
+      ],
+      "centroid": {
+        "age": 39.0919,
+        "obs_bmi": 28.6819,
+        "obs_systolic_bp": 122.4571,
+        "obs_diastolic_bp": 83.1135,
+        "obs_phq9_score": 14.0809,
+        "obs_testosterone": 99.8,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.3473,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.0,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.0,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.6832,
+        "cond_migraine": 0.1028,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.0,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.0,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.0,
+        "cond_pcos": 0.0,
+        "cond_endometriosis": 0.0,
+        "cond_depression": 0.1084,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.0
+      }
+    },
+    "11": {
+      "label": "Profile 11: Hypertension + Thrombophilia",
+      "n_patients_train": 29,
+      "pct_train": 0.7,
+      "blocked_combos": {
+        "EE20_LNG90": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 41.0%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 54.8%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 31.7%]"
+        ],
+        "EE30_LNG150": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 41.0%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 54.8%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 31.7%]"
+        ],
+        "EE35_NET500_1000": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 41.0%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 54.8%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 31.7%]"
+        ],
+        "EE20_NET1000": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 41.0%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 54.8%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 31.7%]"
+        ],
+        "EE25_35_NGM": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 41.0%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 54.8%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 31.7%]"
+        ],
+        "EE30_DSG150": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 41.0%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 54.8%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 31.7%]"
+        ],
+        "EE30_DRSP3": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 41.0%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 54.8%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 31.7%]"
+        ],
+        "EE20_DRSP3": [
+          "WHO MEC Cat 4: Hereditary thrombophilia \u2014 VTE risk \u00d78.4 with estrogen (Bloemenkamp Lancet 1995; WHO MEC Cat 4) [profile prevalence: 41.0%]",
+          "WHO MEC Cat 3: Hypertension \u2014 elevated CVD risk with estrogen (WHO MEC Cat 3) [profile prevalence: 54.8%]",
+          "WHO MEC Cat 3: Diabetes \u2014 vascular risk compounded by estrogen (WHO MEC Cat 3) [profile prevalence: 31.7%]"
+        ]
+      },
+      "all_blocked_ids": [
+        "EE20_DRSP3",
+        "EE20_LNG90",
+        "EE20_NET1000",
+        "EE25_35_NGM",
+        "EE30_DRSP3",
+        "EE30_DSG150",
+        "EE30_LNG150",
+        "EE35_NET500_1000"
+      ],
+      "top_elevated_features": [
+        {
+          "feature": "cond_hypertension",
+          "label": "Hypertension",
+          "cluster_mean": 0.5481,
+          "pop_mean": 0.0933,
+          "elevation": 0.4548
+        },
+        {
+          "feature": "cond_thrombophilia",
+          "label": "Thrombophilia",
+          "cluster_mean": 0.41,
+          "pop_mean": 0.0352,
+          "elevation": 0.3748
+        },
+        {
+          "feature": "cond_diabetes",
+          "label": "Diabetes",
+          "cluster_mean": 0.3167,
+          "pop_mean": 0.0221,
+          "elevation": 0.2946
+        },
+        {
+          "feature": "cond_endometriosis",
+          "label": "Endometriosis",
+          "cluster_mean": 0.3075,
+          "pop_mean": 0.0663,
+          "elevation": 0.2411
+        },
+        {
+          "feature": "cond_asthma",
+          "label": "cond_asthma",
+          "cluster_mean": 0.239,
+          "pop_mean": 0.0017,
+          "elevation": 0.2373
+        },
+        {
+          "feature": "cond_migraine",
+          "label": "Migraine",
+          "cluster_mean": 0.2101,
+          "pop_mean": 0.102,
+          "elevation": 0.1081
+        },
+        {
+          "feature": "cond_migraine_with_aura",
+          "label": "Migraine+Aura",
+          "cluster_mean": 0.0683,
+          "pop_mean": 0.0425,
+          "elevation": 0.0258
+        }
+      ],
+      "centroid": {
+        "age": 41.1637,
+        "obs_bmi": 28.6414,
+        "obs_systolic_bp": 125.2266,
+        "obs_diastolic_bp": 88.5452,
+        "obs_phq9_score": 13.8486,
+        "obs_testosterone": 99.8,
+        "obs_smoker": 0.0,
+        "cond_migraine_with_aura": 0.0683,
+        "cond_stroke": 0.0,
+        "cond_mi": 0.0,
+        "cond_dvt": 0.0,
+        "cond_breast_cancer": 0.0,
+        "cond_lupus": 0.0,
+        "cond_thrombophilia": 0.41,
+        "cond_atrial_fibrillation": 0.0,
+        "cond_liver_disease": 0.0,
+        "cond_hypertension": 0.5481,
+        "cond_migraine": 0.2101,
+        "cond_gallstones": 0.0,
+        "cond_diabetes": 0.3167,
+        "cond_prediabetes": 0.0,
+        "cond_epilepsy": 0.0,
+        "cond_chronic_kidney_disease": 0.0,
+        "cond_sleep_apnea": 0.0,
+        "cond_pcos": 0.0,
+        "cond_endometriosis": 0.3075,
+        "cond_depression": 0.0,
+        "cond_hypothyroidism": 0.0,
+        "cond_rheumatoid_arthritis": 0.0,
+        "cond_fibromyalgia": 0.0,
+        "cond_osteoporosis": 0.0,
+        "cond_asthma": 0.239
+      }
+    }
+  }
+}

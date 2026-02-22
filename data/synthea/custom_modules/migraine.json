@@ -1,0 +1,226 @@
+{
+  "name": "Migraine",
+  "remarks": [
+    "Migraines affect ~18-20% of women. Of those, ~30% experience migraine WITH aura.",
+    "This means roughly 6% of women have migraine with aura, and 14% have migraine without aura.",
+    "",
+    "CRITICAL SAFETY NOTE FOR OCP RECOMMENDATION:",
+    "  - Migraine WITH aura: ABSOLUTE contraindication for estrogen-containing combined OCPs.",
+    "    Estrogen significantly increases stroke risk in this population (WHO Category 4).",
+    "  - Migraine WITHOUT aura (age <35, no smoking): Relative contraindication (WHO Category 2).",
+    "  - Migraine WITHOUT aura (age >35 OR smoker): Stronger contraindication (WHO Category 3).",
+    "",
+    "This module sets:",
+    "  - 'migraine' = true for all migraineurs",
+    "  - 'migraine_with_aura' = true for those with aura (the critical safety flag)",
+    "",
+    "SNOMED-CT codes:",
+    "  - 37796009: Migraine (disorder)",
+    "  - 230462002: Migraine with aura (disorder)",
+    "",
+    "Source: WHO Medical Eligibility Criteria for Contraceptive Use (MEC), 5th edition."
+  ],
+  "states": {
+    "Initial": {
+      "type": "Initial",
+      "conditional_transition": [
+        {
+          "condition": {
+            "condition_type": "Gender",
+            "gender": "M"
+          },
+          "transition": "Terminal"
+        },
+        {
+          "transition": "Delay_Until_Migraine_Age"
+        }
+      ]
+    },
+
+    "Delay_Until_Migraine_Age": {
+      "type": "Delay",
+      "remarks": [
+        "Migraines typically onset in teens to early 30s."
+      ],
+      "range": {
+        "low": 14,
+        "high": 35,
+        "unit": "years"
+      },
+      "direct_transition": "Migraine_Chance"
+    },
+
+    "Migraine_Chance": {
+      "type": "Simple",
+      "remarks": [
+        "~20% of women overall get migraines."
+      ],
+      "distributed_transition": [
+        {
+          "distribution": 0.20,
+          "transition": "Aura_Check"
+        },
+        {
+          "distribution": 0.80,
+          "transition": "Terminal"
+        }
+      ]
+    },
+
+    "Aura_Check": {
+      "type": "Simple",
+      "remarks": [
+        "~30% of migraineurs have migraine with aura.",
+        "So ~6% of all women, ~14% without aura."
+      ],
+      "distributed_transition": [
+        {
+          "distribution": 0.30,
+          "transition": "Migraine_With_Aura_Onset"
+        },
+        {
+          "distribution": 0.70,
+          "transition": "Migraine_Without_Aura_Onset"
+        }
+      ]
+    },
+
+    "Migraine_With_Aura_Onset": {
+      "type": "ConditionOnset",
+      "target_encounter": "Migraine_Diagnosis_Encounter",
+      "assign_to_attribute": "migraine_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "230462002",
+          "display": "Migraine with aura (disorder)"
+        }
+      ],
+      "direct_transition": "Set_Migraine_Attribute"
+    },
+
+    "Migraine_Without_Aura_Onset": {
+      "type": "ConditionOnset",
+      "target_encounter": "Migraine_Diagnosis_Encounter",
+      "assign_to_attribute": "migraine_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "37796009",
+          "display": "Migraine (disorder)"
+        }
+      ],
+      "direct_transition": "Set_Migraine_Attribute"
+    },
+
+    "Set_Migraine_Attribute": {
+      "type": "SetAttribute",
+      "attribute": "migraine",
+      "value": true,
+      "conditional_transition": [
+        {
+          "condition": {
+            "condition_type": "Active Condition",
+            "codes": [
+              {
+                "system": "SNOMED-CT",
+                "code": "230462002",
+                "display": "Migraine with aura (disorder)"
+              }
+            ]
+          },
+          "transition": "Set_Migraine_With_Aura_Attribute"
+        },
+        {
+          "transition": "Migraine_Diagnosis_Encounter"
+        }
+      ]
+    },
+
+    "Set_Migraine_With_Aura_Attribute": {
+      "type": "SetAttribute",
+      "attribute": "migraine_with_aura",
+      "value": true,
+      "direct_transition": "Migraine_Diagnosis_Encounter"
+    },
+
+    "Migraine_Diagnosis_Encounter": {
+      "type": "Encounter",
+      "encounter_class": "outpatient",
+      "reason": "migraine_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "185347001",
+          "display": "Encounter for problem (procedure)"
+        }
+      ],
+      "direct_transition": "Record_Headache_Symptom"
+    },
+
+    "Record_Headache_Symptom": {
+      "type": "Symptom",
+      "symptom": "Headache",
+      "cause": "migraine_condition",
+      "range": {
+        "low": 60,
+        "high": 100
+      },
+      "direct_transition": "Record_Nausea_Symptom"
+    },
+
+    "Record_Nausea_Symptom": {
+      "type": "Symptom",
+      "symptom": "Nausea",
+      "cause": "migraine_condition",
+      "range": {
+        "low": 30,
+        "high": 70
+      },
+      "direct_transition": "Record_Pain_Score"
+    },
+
+    "Record_Pain_Score": {
+      "type": "Observation",
+      "category": "vital-signs",
+      "unit": "{score}",
+      "codes": [
+        {
+          "system": "LOINC",
+          "code": "72514-3",
+          "display": "Pain severity - 0-10 verbal numeric rating [Score] - Reported"
+        }
+      ],
+      "range": {
+        "decimals": 0,
+        "low": 6,
+        "high": 10
+      },
+      "direct_transition": "Prescribe_Triptan"
+    },
+
+    "Prescribe_Triptan": {
+      "type": "MedicationOrder",
+      "assign_to_attribute": "migraine_medication",
+      "reason": "migraine_condition",
+      "codes": [
+        {
+          "system": "RxNorm",
+          "code": "857256",
+          "display": "sumatriptan 50 MG Oral Tablet"
+        }
+      ],
+      "direct_transition": "End_Migraine_Encounter"
+    },
+
+    "End_Migraine_Encounter": {
+      "type": "EncounterEnd",
+      "direct_transition": "Terminal"
+    },
+
+    "Terminal": {
+      "type": "Terminal"
+    }
+  },
+  "gmf_version": 1
+}

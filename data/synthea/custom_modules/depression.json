@@ -1,0 +1,180 @@
+{
+  "name": "Major Depressive Disorder",
+  "remarks": [
+    "Major depressive disorder (MDD) affects ~15-20% of women over their lifetime,",
+    "with higher rates in women than men (roughly 2:1 ratio).",
+    "",
+    "Relevance to OCP recommendation:",
+    "  - Mood changes and depression are known side effects of hormonal contraceptives.",
+    "  - Women with pre-existing depression require careful monitoring when starting OCP.",
+    "  - Progestin-only pills may worsen mood in some patients; combined pills have mixed evidence.",
+    "  - This is a relative consideration, NOT a contraindication, but critical for the",
+    "    utility function (mild_side_effect_score weighting for mood).",
+    "",
+    "This module sets 'depression' = true for use by the Cluster Model and Simulator.",
+    "A PHQ-9 observation is recorded to give a baseline severity measure.",
+    "",
+    "SNOMED-CT: 370143000 (Major depressive disorder)",
+    "Source: WHO, DSM-5"
+  ],
+  "states": {
+    "Initial": {
+      "type": "Initial",
+      "conditional_transition": [
+        {
+          "condition": {
+            "condition_type": "Gender",
+            "gender": "M"
+          },
+          "transition": "Terminal"
+        },
+        {
+          "transition": "Delay_Until_Depression_Age"
+        }
+      ]
+    },
+
+    "Delay_Until_Depression_Age": {
+      "type": "Delay",
+      "remarks": [
+        "Depression can onset at any age but peaks in reproductive years (20s-40s)."
+      ],
+      "range": {
+        "low": 15,
+        "high": 45,
+        "unit": "years"
+      },
+      "direct_transition": "Depression_Chance"
+    },
+
+    "Depression_Chance": {
+      "type": "Simple",
+      "remarks": [
+        "~15% lifetime prevalence in women. Using a conservative estimate for active cases",
+        "in the reproductive age window."
+      ],
+      "distributed_transition": [
+        {
+          "distribution": 0.15,
+          "transition": "Depression_Onset"
+        },
+        {
+          "distribution": 0.85,
+          "transition": "Terminal"
+        }
+      ]
+    },
+
+    "Depression_Onset": {
+      "type": "ConditionOnset",
+      "target_encounter": "Depression_Diagnosis_Encounter",
+      "assign_to_attribute": "depression_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "370143000",
+          "display": "Major depressive disorder"
+        }
+      ],
+      "direct_transition": "Depression_Diagnosis_Encounter"
+    },
+
+    "Depression_Diagnosis_Encounter": {
+      "type": "Encounter",
+      "encounter_class": "outpatient",
+      "reason": "depression_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "185347001",
+          "display": "Encounter for problem (procedure)"
+        }
+      ],
+      "direct_transition": "Set_Depression_Attribute"
+    },
+
+    "Set_Depression_Attribute": {
+      "type": "SetAttribute",
+      "attribute": "depression",
+      "value": true,
+      "direct_transition": "Record_PHQ9_Score"
+    },
+
+    "Record_PHQ9_Score": {
+      "type": "Observation",
+      "category": "survey",
+      "unit": "{score}",
+      "remarks": [
+        "PHQ-9 score: 0-4 minimal, 5-9 mild, 10-14 moderate, 15-19 moderately severe, 20-27 severe.",
+        "This range (10-19) represents moderate-to-moderately-severe depression."
+      ],
+      "codes": [
+        {
+          "system": "LOINC",
+          "code": "44261-6",
+          "display": "Patient Health Questionnaire 9 item (PHQ-9) total score [Reported]"
+        }
+      ],
+      "range": {
+        "decimals": 0,
+        "low": 10,
+        "high": 19
+      },
+      "direct_transition": "Record_Depression_Symptoms"
+    },
+
+    "Record_Depression_Symptoms": {
+      "type": "Symptom",
+      "symptom": "Depressed mood",
+      "cause": "depression_condition",
+      "range": {
+        "low": 50,
+        "high": 90
+      },
+      "direct_transition": "Depression_Severity_Check"
+    },
+
+    "Depression_Severity_Check": {
+      "type": "Simple",
+      "distributed_transition": [
+        {
+          "distribution": 0.60,
+          "transition": "Prescribe_SSRI"
+        },
+        {
+          "distribution": 0.40,
+          "transition": "End_Depression_Encounter"
+        }
+      ]
+    },
+
+    "Prescribe_SSRI": {
+      "type": "MedicationOrder",
+      "assign_to_attribute": "depression_medication",
+      "reason": "depression_condition",
+      "remarks": [
+        "SSRIs are first-line treatment for MDD. Sertraline is a common choice.",
+        "Note: Some SSRIs may interact with certain medications - important context for",
+        "the simulation model."
+      ],
+      "codes": [
+        {
+          "system": "RxNorm",
+          "code": "312938",
+          "display": "sertraline 100 MG Oral Tablet"
+        }
+      ],
+      "direct_transition": "End_Depression_Encounter"
+    },
+
+    "End_Depression_Encounter": {
+      "type": "EncounterEnd",
+      "direct_transition": "Terminal"
+    },
+
+    "Terminal": {
+      "type": "Terminal"
+    }
+  },
+  "gmf_version": 1
+}

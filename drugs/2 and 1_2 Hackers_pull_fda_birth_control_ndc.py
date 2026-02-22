@@ -1,0 +1,92 @@
+import csv, json, time, requests
+from pathlib import Path
+
+OUTDIR = Path("fda_birth_control")
+OUTDIR.mkdir(exist_ok=True)
+BASE = "https://api.fda.gov/drug/ndc.json"
+
+# Common contraceptive pill hormones (not exhaustive, but a solid start)
+INGREDIENTS = [
+    "ETHINYL ESTRADIOL",
+    "NORETHINDRONE",
+    "LEVONORGESTREL",
+    "NORGESTIMATE",
+    "DESOGESTREL",
+    "DROSPIRENONE",
+    "NORGESTREL",
+    "ETHYNODIOL DIACETATE",
+    "NORETHINDRONE ACETATE",
+]
+
+def fetch_all(search: str, limit: int = 100, max_pages: int = 200):
+    all_rows = []
+    skip = 0
+    for _ in range(max_pages):
+        params = {"search": search, "limit": limit, "skip": skip}
+        r = requests.get(BASE, params=params, timeout=30)
+        if r.status_code == 404:
+            break
+        r.raise_for_status()
+        rows = r.json().get("results", [])
+        all_rows.extend(rows)
+        if len(rows) < limit:
+            break
+        skip += limit
+        time.sleep(0.2)
+    return all_rows
+
+def flatten_active_ingredients(ai_list):
+    if not ai_list:
+        return ""
+    return "; ".join(
+        f'{ai.get("name","")} ({ai.get("strength","")})'.strip()
+        for ai in ai_list
+    )
+
+def main():
+    by_ndc = {}
+
+    for ing in INGREDIENTS:
+        q = f'active_ingredients.name:"{ing}" AND route:"ORAL" AND dosage_form:"TABLET"'
+        rows = fetch_all(q)
+        for r in rows:
+            ndc = r.get("product_ndc")
+            if ndc:
+                by_ndc[ndc] = r
+
+    rows = list(by_ndc.values())
+
+    raw_path = OUTDIR / "birth_control_ndc_raw.json"
+    raw_path.write_text(json.dumps(rows, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    csv_path = OUTDIR / "birth_control_ndc_flat.csv"
+    fieldnames = [
+        "product_ndc","brand_name","generic_name",
+        "route","dosage_form","active_ingredients",
+        "marketing_category","labeler_name",
+        "start_marketing_date","end_marketing_date"
+    ]
+
+    with csv_path.open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fieldnames)
+        w.writeheader()
+        for r in rows:
+            w.writerow({
+                "product_ndc": r.get("product_ndc",""),
+                "brand_name": r.get("brand_name",""),
+                "generic_name": r.get("generic_name",""),
+                "route": r.get("route",""),
+                "dosage_form": r.get("dosage_form",""),
+                "active_ingredients": flatten_active_ingredients(r.get("active_ingredients",[])),
+                "marketing_category": r.get("marketing_category",""),
+                "labeler_name": r.get("labeler_name",""),
+                "start_marketing_date": r.get("start_marketing_date",""),
+                "end_marketing_date": r.get("end_marketing_date",""),
+            })
+
+    print("Done.")
+    print("Records:", len(rows))
+    print("Wrote:", raw_path, "and", csv_path)
+
+if __name__ == "__main__":
+    main()

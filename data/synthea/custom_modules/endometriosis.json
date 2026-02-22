@@ -1,0 +1,145 @@
+{
+  "name": "Endometriosis",
+  "remarks": [
+    "Endometriosis affects approximately 10% of women of reproductive age (~176 million worldwide).",
+    "It is characterized by endometrial-like tissue growing outside the uterus, causing chronic",
+    "pelvic pain, severe dysmenorrhea, and can contribute to infertility.",
+    "Combined oral contraceptives are a first-line treatment to suppress the endometrial tissue",
+    "and manage pain. This is an OCP indication, NOT a contraindication.",
+    "This module sets 'endometriosis' = true for downstream use by the Safe Gate Engine",
+    "and the Cluster Model.",
+    "SNOMED-CT: 129103003 (Endometriosis)",
+    "Source: https://www.who.int/news-room/fact-sheets/detail/endometriosis"
+  ],
+  "states": {
+    "Initial": {
+      "type": "Initial",
+      "conditional_transition": [
+        {
+          "condition": {
+            "condition_type": "Gender",
+            "gender": "M"
+          },
+          "transition": "Terminal"
+        },
+        {
+          "transition": "Delay_Until_Reproductive_Age"
+        }
+      ]
+    },
+
+    "Delay_Until_Reproductive_Age": {
+      "type": "Delay",
+      "range": {
+        "low": 16,
+        "high": 35,
+        "unit": "years"
+      },
+      "direct_transition": "Endometriosis_Chance"
+    },
+
+    "Endometriosis_Chance": {
+      "type": "Simple",
+      "remarks": [
+        "~10% lifetime prevalence in women of reproductive age.",
+        "Often takes years to diagnose due to symptom overlap with other conditions."
+      ],
+      "distributed_transition": [
+        {
+          "distribution": 0.10,
+          "transition": "Endometriosis_Onset"
+        },
+        {
+          "distribution": 0.90,
+          "transition": "Terminal"
+        }
+      ]
+    },
+
+    "Endometriosis_Onset": {
+      "type": "ConditionOnset",
+      "target_encounter": "Endometriosis_Diagnosis_Encounter",
+      "assign_to_attribute": "endometriosis_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "129103003",
+          "display": "Endometriosis"
+        }
+      ],
+      "direct_transition": "Endometriosis_Diagnosis_Encounter"
+    },
+
+    "Endometriosis_Diagnosis_Encounter": {
+      "type": "Encounter",
+      "encounter_class": "outpatient",
+      "reason": "endometriosis_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "185347001",
+          "display": "Encounter for problem (procedure)"
+        }
+      ],
+      "direct_transition": "Set_Endometriosis_Attribute"
+    },
+
+    "Set_Endometriosis_Attribute": {
+      "type": "SetAttribute",
+      "attribute": "endometriosis",
+      "value": true,
+      "direct_transition": "Record_Pelvic_Pain_Symptom"
+    },
+
+    "Record_Pelvic_Pain_Symptom": {
+      "type": "Symptom",
+      "symptom": "Pelvic pain",
+      "cause": "endometriosis_condition",
+      "range": {
+        "low": 50,
+        "high": 90
+      },
+      "direct_transition": "Record_Dysmenorrhea_Symptom"
+    },
+
+    "Record_Dysmenorrhea_Symptom": {
+      "type": "Symptom",
+      "symptom": "Dysmenorrhea",
+      "cause": "endometriosis_condition",
+      "range": {
+        "low": 60,
+        "high": 100
+      },
+      "direct_transition": "Record_Pain_Score"
+    },
+
+    "Record_Pain_Score": {
+      "type": "Observation",
+      "category": "vital-signs",
+      "unit": "{score}",
+      "codes": [
+        {
+          "system": "LOINC",
+          "code": "72514-3",
+          "display": "Pain severity - 0-10 verbal numeric rating [Score] - Reported"
+        }
+      ],
+      "range": {
+        "decimals": 0,
+        "low": 5,
+        "high": 9
+      },
+      "direct_transition": "End_Endometriosis_Encounter"
+    },
+
+    "End_Endometriosis_Encounter": {
+      "type": "EncounterEnd",
+      "direct_transition": "Terminal"
+    },
+
+    "Terminal": {
+      "type": "Terminal"
+    }
+  },
+  "gmf_version": 1
+}

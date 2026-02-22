@@ -1,0 +1,141 @@
+{
+  "name": "Polycystic Ovary Syndrome (PCOS)",
+  "remarks": [
+    "PCOS affects approximately 6-12% of women of reproductive age (modeled here at 10%).",
+    "It is characterized by irregular menstrual cycles, hyperandrogenism, and polycystic ovaries.",
+    "Combined oral contraceptives are often prescribed to manage PCOS symptoms (cycle regulation,",
+    "androgen suppression, acne). This module sets the 'pcos' attribute to true, which is used",
+    "by the Safe Gate Engine to flag this condition as a potential OCP indication.",
+    "SNOMED-CT: 237055002 (Polycystic ovarian syndrome)",
+    "Source: https://www.nichd.nih.gov/health/topics/pcos"
+  ],
+  "states": {
+    "Initial": {
+      "type": "Initial",
+      "conditional_transition": [
+        {
+          "condition": {
+            "condition_type": "Gender",
+            "gender": "M"
+          },
+          "transition": "Terminal"
+        },
+        {
+          "transition": "Delay_Until_Reproductive_Age"
+        }
+      ]
+    },
+
+    "Delay_Until_Reproductive_Age": {
+      "type": "Delay",
+      "range": {
+        "low": 15,
+        "high": 28,
+        "unit": "years"
+      },
+      "direct_transition": "PCOS_Chance"
+    },
+
+    "PCOS_Chance": {
+      "type": "Simple",
+      "remarks": [
+        "~10% lifetime prevalence in women of reproductive age."
+      ],
+      "distributed_transition": [
+        {
+          "distribution": 0.10,
+          "transition": "PCOS_Onset"
+        },
+        {
+          "distribution": 0.90,
+          "transition": "Terminal"
+        }
+      ]
+    },
+
+    "PCOS_Onset": {
+      "type": "ConditionOnset",
+      "target_encounter": "PCOS_Diagnosis_Encounter",
+      "assign_to_attribute": "pcos_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "237055002",
+          "display": "Polycystic ovarian syndrome"
+        }
+      ],
+      "direct_transition": "PCOS_Diagnosis_Encounter"
+    },
+
+    "PCOS_Diagnosis_Encounter": {
+      "type": "Encounter",
+      "encounter_class": "outpatient",
+      "reason": "pcos_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "185347001",
+          "display": "Encounter for problem (procedure)"
+        }
+      ],
+      "direct_transition": "Set_PCOS_Attribute"
+    },
+
+    "Set_PCOS_Attribute": {
+      "type": "SetAttribute",
+      "attribute": "pcos",
+      "value": true,
+      "direct_transition": "Record_Irregular_Menstruation_Symptom"
+    },
+
+    "Record_Irregular_Menstruation_Symptom": {
+      "type": "Symptom",
+      "symptom": "Irregular menstruation",
+      "cause": "pcos_condition",
+      "exact": {
+        "quantity": 60
+      },
+      "direct_transition": "Record_Hirsutism_Symptom"
+    },
+
+    "Record_Hirsutism_Symptom": {
+      "type": "Symptom",
+      "symptom": "Hirsutism",
+      "cause": "pcos_condition",
+      "range": {
+        "low": 20,
+        "high": 60
+      },
+      "direct_transition": "Observe_Elevated_Androgens"
+    },
+
+    "Observe_Elevated_Androgens": {
+      "type": "Observation",
+      "category": "laboratory",
+      "unit": "ng/dL",
+      "codes": [
+        {
+          "system": "LOINC",
+          "code": "2986-8",
+          "display": "Testosterone [Mass/volume] in Serum or Plasma"
+        }
+      ],
+      "range": {
+        "decimals": 1,
+        "low": 50.0,
+        "high": 150.0
+      },
+      "direct_transition": "End_PCOS_Encounter"
+    },
+
+    "End_PCOS_Encounter": {
+      "type": "EncounterEnd",
+      "direct_transition": "Terminal"
+    },
+
+    "Terminal": {
+      "type": "Terminal"
+    }
+  },
+  "gmf_version": 1
+}

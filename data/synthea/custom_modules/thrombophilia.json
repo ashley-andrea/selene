@@ -1,0 +1,133 @@
+{
+  "name": "Hereditary Thrombophilia",
+  "remarks": [
+    "Hereditary thrombophilia (e.g. Factor V Leiden, Prothrombin G20210A, Protein C/S deficiency)",
+    "affects approximately 5-8% of the general population. Factor V Leiden alone is present in",
+    "~5% of individuals of Northern European descent.",
+    "",
+    "CRITICAL SAFETY NOTE FOR OCP RECOMMENDATION:",
+    "  - Hereditary thrombophilia is an ABSOLUTE contraindication for estrogen-containing",
+    "    combined oral contraceptives (WHO Category 4).",
+    "  - Estrogen increases thrombotic risk 3-6x; combined with thrombophilia the risk is",
+    "    multiplicative (up to 50x baseline for Factor V Leiden homozygotes).",
+    "  - Progestin-only pills (minipill) are safer but still carry a relative contraindication",
+    "    (WHO Category 2-3 depending on the specific defect).",
+    "",
+    "This module sets 'thrombophilia' = true — the most important hard block in the Safe Gate Engine.",
+    "",
+    "SNOMED-CT: 441519001 (Hereditary thrombophilia)",
+    "Source: WHO MEC 5th edition; Martinelli et al., NEJM 2001."
+  ],
+  "states": {
+    "Initial": {
+      "type": "Initial",
+      "remarks": [
+        "Thrombophilia is a genetic condition present from birth but may only be discovered",
+        "when a thrombotic event occurs or through screening. We model diagnosis in adulthood."
+      ],
+      "distributed_transition": [
+        {
+          "distribution": 0.06,
+          "transition": "Delay_Until_Diagnosis"
+        },
+        {
+          "distribution": 0.94,
+          "transition": "Terminal"
+        }
+      ]
+    },
+
+    "Delay_Until_Diagnosis": {
+      "type": "Delay",
+      "remarks": [
+        "Thrombophilia is often diagnosed after a first VTE event or pre-contraception screening.",
+        "Modeled as diagnosis in young adulthood when OCP consideration typically begins."
+      ],
+      "range": {
+        "low": 18,
+        "high": 40,
+        "unit": "years"
+      },
+      "direct_transition": "Thrombophilia_Onset"
+    },
+
+    "Thrombophilia_Onset": {
+      "type": "ConditionOnset",
+      "target_encounter": "Thrombophilia_Diagnosis_Encounter",
+      "assign_to_attribute": "thrombophilia_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "441519001",
+          "display": "Hereditary thrombophilia (disorder)"
+        }
+      ],
+      "direct_transition": "Thrombophilia_Diagnosis_Encounter"
+    },
+
+    "Thrombophilia_Diagnosis_Encounter": {
+      "type": "Encounter",
+      "encounter_class": "outpatient",
+      "reason": "thrombophilia_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "185347001",
+          "display": "Encounter for problem (procedure)"
+        }
+      ],
+      "direct_transition": "Set_Thrombophilia_Attribute"
+    },
+
+    "Set_Thrombophilia_Attribute": {
+      "type": "SetAttribute",
+      "attribute": "thrombophilia",
+      "value": true,
+      "direct_transition": "Order_Coagulation_Labs"
+    },
+
+    "Order_Coagulation_Labs": {
+      "type": "Procedure",
+      "reason": "thrombophilia_condition",
+      "codes": [
+        {
+          "system": "SNOMED-CT",
+          "code": "441580006",
+          "display": "Measurement of coagulation factor (procedure)"
+        }
+      ],
+      "direct_transition": "Record_Factor_V_Leiden"
+    },
+
+    "Record_Factor_V_Leiden": {
+      "type": "Observation",
+      "category": "laboratory",
+      "unit": "{presence}",
+      "remarks": [
+        "A positive genetic test for Factor V Leiden or equivalent marker.",
+        "Value 1 = positive / present. Unit {presence} is the UCUM annotation for qualitative tests."
+      ],
+      "codes": [
+        {
+          "system": "LOINC",
+          "code": "34506-7",
+          "display": "Coagulation Factor V mutation [Presence] in Blood by Molecular genetics method"
+        }
+      ],
+      "exact": {
+        "quantity": 1
+      },
+      "direct_transition": "End_Thrombophilia_Encounter"
+    },
+
+    "End_Thrombophilia_Encounter": {
+      "type": "EncounterEnd",
+      "direct_transition": "Terminal"
+    },
+
+    "Terminal": {
+      "type": "Terminal"
+    }
+  },
+  "gmf_version": 1
+}
