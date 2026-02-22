@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/layout/Navbar";
 import Stars from "@/components/home/Stars";
+import WakeupPing from "@/components/home/WakeupPing";
 import UploadStep from "@/components/intake/UploadStep";
 import ManualForm from "@/components/intake/ManualForm";
 import type { PatientFormData, PDFExtractionResult } from "@/lib/types";
@@ -40,6 +41,7 @@ export default function IntakePage() {
         }}
       />
       <Stars />
+      <WakeupPing />
       <Navbar />
 
       <div

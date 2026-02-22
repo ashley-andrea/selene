@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Navbar from "@/components/layout/Navbar";
 import Stars from "@/components/home/Stars";
+import WakeupPing from "@/components/home/WakeupPing";
 
 /* Orbital ring decorative element */
 function OrbitalRing({
@@ -70,6 +71,7 @@ export default function HomePage() {
         }}
       />
       <Stars />
+      <WakeupPing />
       <Navbar />
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
