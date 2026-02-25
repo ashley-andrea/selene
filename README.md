@@ -4,13 +4,14 @@ AI-powered oral contraceptive recommendation engine. A medical-safety-first agen
 
 Contraception is one of the most personal and consequential healthcare decisions a person can make. This system uses AI not to automate paperwork, but to give every patient access to the kind of careful, individualised clinical reasoning that is usually reserved for specialist consultations. **Claude (claude-sonnet-4-5)** is the agent powering this reasoning.
 
+[![Try it here](https://img.shields.io/badge/-Try%20it%20here-purple?style=for-the-badge)](https://27selene.vercel.app)
+
+*Note: the pipeline will not work — we can't leave our Claude API key there forever, we are poor.*
 
 https://github.com/user-attachments/assets/ebff3b42-dfae-40a1-b527-e6b22a7c95c8
 
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-27selene.vercel.app-blue?style=for-the-badge)](https://27selene.vercel.app)
 
-*Note: the pipeline will not work — we can't leave our Claude API key there forever, we are poor.*
 
 ---
 
