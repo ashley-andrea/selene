@@ -43,3 +43,6 @@ drugs/*_faers_reactions_exploded.csv
 data/output/symptom_diaries.csv
 
 _docs/TechDocumentation.md
+
+# HF Space staging clone (auto-created by hf_space/push_to_hf.sh, not committed)
+_hf_space_clone/
