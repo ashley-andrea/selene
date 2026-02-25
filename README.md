@@ -128,6 +128,7 @@ python run_pipeline.py --patient test_patient.json
 # high-risk and low-confidence fixtures also available:
 python run_pipeline.py --patient test_high_risk.json
 python run_pipeline.py --patient test_low_confidence.json
+#or use the pdf of the medical record directly
 python run_pipeline.py --pdf Medical_record_examples/medical_report.pdf
 ```
 
