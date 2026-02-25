@@ -1,6 +1,6 @@
 # Selene - Every body reacts differently
 
-AI-powered oral contraceptive recommendation engine. A medical-safety-first agentic loop selects the best pill for a patient — no LLM ever makes a safety decision.
+AI-powered oral contraceptive recommendation engine. A medical-safety-first agentic loop selects the best pill for a patient, no LLM ever makes a safety decision.
 
 Contraception is one of the most personal and consequential healthcare decisions a person can make. This system uses AI not to automate paperwork, but to give every patient access to the kind of careful, individualised clinical reasoning that is usually reserved for specialist consultations. **Claude (claude-sonnet-4-5)** is the agent powering this reasoning.
 
