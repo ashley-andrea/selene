@@ -6,7 +6,7 @@ Contraception is one of the most personal and consequential healthcare decisions
 
 [![Try it here](https://img.shields.io/badge/-Try%20it%20here-purple?style=for-the-badge)](https://27selene.vercel.app)
 
-*Note: the pipeline will not work — we can't leave our Claude API key there forever, we are poor.*
+*Note: the pipeline will not work — we can't leave our Claude API key there forever, we are poor. But you can [run it locally](#running-locally) with Ollama or any supported LLM.*
 
 https://github.com/user-attachments/assets/ebff3b42-dfae-40a1-b527-e6b22a7c95c8
 
@@ -94,4 +94,48 @@ Full technical documentation: `docs/TechDocumentation.md`
 We studied the commercial viability of spinning this into a startup. The addressable market is large, over 150 million women use oral contraceptives globally, yet the prescribing process remains largely unchanged: a brief GP visit, a generic recommendation, and a trial-and-error period that can last months.
 
 Our analysis covers market sizing, competitive landscape, go-to-market strategy, regulatory pathway considerations, and a monetisation model (B2B2C via gynaecology clinics and telehealth platforms). The full study is in `_docs/BusinessAnalysis.pdf`
+
+---
+
+## Running Locally
+
+```bash
+git clone https://github.com/your-org/selene
+cd selene
+pip install -r requirements.txt
+```
+
+**1. LLM** — set `LLM_PROVIDER` in your `.env` to `ollama`, `claude`, or `openai`. For Ollama, start the server (`ollama serve`) and set `OLLAMA_MODEL` to the model you want (e.g. `llama3`).
+
+**2. ML model servers** — the pipeline calls two REST APIs for clustering and simulation. The easiest option is to point the env vars at our Hugging Face Spaces (no local server needed):
+
+```env
+CLUSTER_API_URL=https://pietrosaveri-selene-ml-apis.hf.space/api/v1/cluster/predict
+SIMULATOR_API_URL=https://pietrosaveri-selene-ml-apis.hf.space/api/v1/simulator/simulate
+```
+
+Alternatively, run the servers locally:
+
+```bash
+# in one terminal
+python hf_space/serve.py   # starts both model endpoints on localhost
+```
+# Run the entire flow
+**Option A — terminal, pre-built test patients and pdf**
+
+```bash
+python run_pipeline.py --patient test_patient.json
+# high-risk and low-confidence fixtures also available:
+python run_pipeline.py --patient test_high_risk.json
+python run_pipeline.py --patient test_low_confidence.json
+python run_pipeline.py --pdf Medical_record_examples/medical_report.pdf
+```
+
+**Option B — UI, upload a real PDF medical record or insert the data manually**
+
+```bash
+cd frontend && npm install && npm run dev
+```
+
+Open `http://localhost:3000`, upload a patient PDF, and the agent will parse it and run the full recommendation pipeline.
 
