@@ -8,6 +8,10 @@ Contraception is one of the most personal and consequential healthcare decisions
 https://github.com/user-attachments/assets/ebff3b42-dfae-40a1-b527-e6b22a7c95c8
 
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-27selene.vercel.app-blue?style=for-the-badge)](https://27selene.vercel.app)
+
+*Note: the pipeline will not work — we can't leave our Claude API key there forever, we are poor.*
+
 ---
 
 ## Agent
@@ -57,9 +61,11 @@ Satisfaction regression: RMSE 0.873, MAE 0.645. Native NaN handling covers PHQ-9
 
 ---
 
-## Hosting — Red Hat OpenShift
+## Hosting — Hugging Face
 
-Both models are deployed as **REST APIs on Red Hat OpenShift** and called by the agent as external tools:
+During the hackathon, both models were deployed as **REST APIs on Red Hat OpenShift** — which earned us the **Best Use of Red Hat** award. We have since migrated the endpoints to **Hugging Face Spaces** to keep things running without the infrastructure overhead.
+
+The current endpoint URLs are configured via environment variables — check your `.env` file:
 
 | Tool | Endpoint | Purpose |
 |---|---|---|
